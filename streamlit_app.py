@@ -15,7 +15,7 @@ st.set_page_config(
 )
 data = {'Nucleus': [1, 2, 3, 4],
         'Location X': [20.444, 21.22, 19.567, 18.234],
-        'Location Y': [3.20, 0.21, 1.19, 2.18],
+        'Location Y': [3.456789020, 0.21, 1.19, 2.18],
         'Area': [20, 21, 19, 18]}
 df_result = pd.DataFrame(data)
 @st.cache

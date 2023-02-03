@@ -6,12 +6,24 @@ from datetime import time, datetime
 from PIL import Image
 import PIL.ImageOps   
 from io import BytesIO
+from matplotlib import cm
 from ML import invert
+from imagemks_function import vis,get_df,cell_counting_from_img,labelvis
 
 st.set_page_config(
     page_title="Counting Nucleus",
     layout="wide"
 )
+st.markdown("""
+<style>
+body {
+  background: #ff0099; 
+  background: -webkit-linear-gradient(to right, #ff0099, #493240); 
+  background: linear-gradient(to right, #ff0099, #493240); 
+}
+</style>
+    """, unsafe_allow_html=True)
+    
 data = {'Nucleus': [1, 2, 3, 4],
         'Location X': [20.444, 21.22, 19.567, 18.234],
         'Location Y': [3.20, 0.21, 1.19, 2.18],
@@ -43,7 +55,9 @@ with col1:
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
-    imagee , df_result = invert(image)
+    img , araaylable = cell_counting_from_img(image)
+    imagee = Image.fromarray(img)
+    df_result = get_df(araaylable)
     with col2:
         st.text(" ")
         st.text(" ")

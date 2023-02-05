@@ -8,22 +8,22 @@ import PIL.ImageOps
 from io import BytesIO
 from matplotlib import cm
 from ML import invert
-from imagemks_function import vis,get_df,cell_counting_from_img,labelvis
+from imagemks_function import vis,get_df,labelvis,cell_counting
+
 
 st.set_page_config(
     page_title="Counting Nucleus",
     layout="wide"
 )
 st.markdown("""
-<style>
-body {
-  background: #ff0099; 
-  background: -webkit-linear-gradient(to right, #ff0099, #493240); 
-  background: linear-gradient(to right, #ff0099, #493240); 
-}
-</style>
-    """, unsafe_allow_html=True)
-    
+        <style>
+               .block-container {
+                    padding-top: 5rem;
+                    padding-bottom: 0rem;
+                }
+        </style>
+        """, unsafe_allow_html=True)
+
 data = {'Nucleus': [1, 2, 3, 4],
         'Location X': [20.444, 21.22, 19.567, 18.234],
         'Location Y': [3.20, 0.21, 1.19, 2.18],
@@ -47,7 +47,7 @@ st.markdown("<h5 style='text-align: center; '>Web Application for cell counting 
 st.text(" ")
 st.write("#")
 st.text(" ")
-spacer,col1,spacer,col2,spacer = st.columns([1,3,1,3,1])
+spacer,col1,spacer,col2,spacer = st.columns([1,6,1,4,1])
 run = False
 with col1:
     st.header('Upload Your Image')
@@ -55,7 +55,7 @@ with col1:
 
 if uploaded_file is not None:
     image = Image.open(uploaded_file)
-    img , araaylable = cell_counting_from_img(image)
+    img , araaylable = cell_counting(image)
     imagee = Image.fromarray(img)
     df_result = get_df(araaylable)
     with col2:
@@ -64,15 +64,17 @@ if uploaded_file is not None:
         st.text(" ")
         st.text(" ")
         st.image(image, caption='Your input Image')
-    spacer,colrun,spacer = st.columns([6,1,10])
+    spacer,colrun,spacer = st.columns([8,1,10])
     with colrun:
         if st.button('RUN'):
             run = True
     if run:
-        spacer,col3,spacer,col4,spacer = st.columns([1,3,1,3,1])
+        spacer,col3,spacer,col4,spacer = st.columns([1,6,1,4,1])
         with col3:
             st.header('Result')
-            st.write('Number of Nucleus is ',len(df_result. index) ,'nucleus')    
+            numbercell = len(df_result. index)
+            st.markdown(
+            """ ###### Number of Nucleus is <span style="background-color: #AA706A; color:white">{temp}</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
             csv = convert_df(df_result)
             st.write(df_result)
             
@@ -100,11 +102,20 @@ if uploaded_file is not None:
                 file_name="result.png",
                 mime="image/png"
                 )
+spacer,footer,spacer = st.columns([1,10,1])
+with footer:
+    st.markdown("<hr align='center' width='100%;' size='10'>  ", unsafe_allow_html=True)
+spacer,footer3,footer2,spacer = st.columns([4,3,5,1])
+with footer3:
+    st.markdown("<h2 style='text-align: left; '>Members : </h2>  ", unsafe_allow_html=True)
+with footer2:
+    st.markdown("<p style='text-align: left; '>Ms. Kanchayapond Seajoong</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: left; '>Ms. Nichapat Nobnorb</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: left; '>Mr. Wayu Ragwongsiri</p>", unsafe_allow_html=True)
+    st.text(" ")
+st.markdown("<h6 style='text-align: center; '>Web Application for Automatic Nucleus Counting 3D Immunofluorescence Tissue Biopsies Using Image Processing</h6>", unsafe_allow_html=True)
+st.text("A PROJECT SUBMITTED IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF BACHELOR OF SCIENCE (COMPUTER ENGINEERING) FACULTY OF ENGINEERING KING MONGKUT’S UNIVERSITY OF TECHNOLOGY THONBURI 2022")
 #        st.info('☝️ Upload a image file')
-    
-
-
-
     # with open(imagee, "rb") as file:
         # btn = st.download_button(
         #     label="Download image",
@@ -112,9 +123,6 @@ if uploaded_file is not None:
         #     file_name="result.png",
         #     mime="image/png"
         #   )
-
-
-
 # with st.expander('About this app'):
 #   st.write('This app shows the various ways on how you can layout your Streamlit app.')
 #   st.image('https://streamlit.io/images/brand/streamlit-logo-secondary-colormark-darktext.png', width=250)

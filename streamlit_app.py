@@ -35,14 +35,14 @@ def convert_df(df):
     return df.to_csv().encode('utf-8')
 
 
-st.markdown("<h1 style='text-align: center; font-size:450%;'>Welcome to</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center; font-size:400%;'>Welcome to</h1>", unsafe_allow_html=True)
 spacer,colh1,spacer = st.columns([13,11,10])
 with colh1:
     imagehead = Image.open('logi-removebg.png')
-    st.image(imagehead,width=300)
+    st.image(imagehead,width=269)
 spacer,colh2,spacer = st.columns([1,2,1])
 with colh2:
-    st.markdown("<hr align='center' width='100%;' size='10'>  ", unsafe_allow_html=True)
+    st.markdown("<hr align='center'; width=100%;size='-1'>  ", unsafe_allow_html=True)
 st.markdown("<h5 style='text-align: center; '>Web Application for cell counting from Immunofluorescence tissue</h4>", unsafe_allow_html=True)
 st.text(" ")
 st.write("#")
@@ -64,7 +64,7 @@ if uploaded_file is not None:
         st.text(" ")
         st.text(" ")
         st.image(image, caption='Your input Image')
-    spacer,colrun,spacer = st.columns([8,1,10])
+    spacer,colrun = st.columns([3,5])
     with colrun:
         if st.button('RUN'):
             run = True
@@ -119,7 +119,7 @@ with footer2:
     st.markdown("<p style='text-align: left; color:#73664f;'>Mr. Wayu Ragwongsiri</p>", unsafe_allow_html=True)
     st.text(" ")
 st.markdown("<h6 style='text-align: center; color:#73664f; '>Web Application for Automatic Nucleus Counting 3D Immunofluorescence Tissue Biopsies Using Image Processing</h6>", unsafe_allow_html=True)
-st.text("A PROJECT SUBMITTED IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF BACHELOR OF SCIENCE (COMPUTER ENGINEERING) FACULTY OF ENGINEERING KING MONGKUT’S UNIVERSITY OF TECHNOLOGY THONBURI 2022")
+st.markdown("<p style='text-align: center; color:#73664f; font-size:80%; '>A PROJECT SUBMITTED IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF BACHELOR OF SCIENCE (COMPUTER ENGINEERING) FACULTY OF ENGINEERING KING MONGKUT’S UNIVERSITY OF TECHNOLOGY THONBURI 2022</p>", unsafe_allow_html=True)
 #        st.info('☝️ Upload a image file')
     # with open(imagee, "rb") as file:
         # btn = st.download_button(

@@ -18,7 +18,7 @@ st.set_page_config(
 st.markdown("""
         <style>
                .block-container {
-                    padding-top: 5rem;
+                    padding-top: 4rem;
                     padding-bottom: 0rem;
                 }
         </style>
@@ -74,7 +74,7 @@ if uploaded_file is not None:
             st.header('Result')
             numbercell = len(df_result. index)
             st.markdown(
-            """ ###### Number of Nucleus is <span style="background-color: #AA706A; color:white">{temp}</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
+            """ ###### Number of Nucleus is <span style="background-color: #C9A4A0; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
             csv = convert_df(df_result)
             st.write(df_result)
             
@@ -102,18 +102,23 @@ if uploaded_file is not None:
                 file_name="result.png",
                 mime="image/png"
                 )
+st.text(" ")
+st.write("#")
+st.text(" ")
+st.text(" ")
+
 spacer,footer,spacer = st.columns([1,10,1])
 with footer:
     st.markdown("<hr align='center' width='100%;' size='10'>  ", unsafe_allow_html=True)
 spacer,footer3,footer2,spacer = st.columns([4,3,5,1])
 with footer3:
-    st.markdown("<h2 style='text-align: left; '>Members : </h2>  ", unsafe_allow_html=True)
+    st.markdown("<h2 style='text-align: left; color:#8a613e;  '>Members : </h2>  ", unsafe_allow_html=True)
 with footer2:
-    st.markdown("<p style='text-align: left; '>Ms. Kanchayapond Seajoong</p>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: left; '>Ms. Nichapat Nobnorb</p>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: left; '>Mr. Wayu Ragwongsiri</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: left; color:#73664f; '>Ms. Kanchayapond Seajoong</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: left; color:#73664f;'>Ms. Nichapat Nobnorb</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: left; color:#73664f;'>Mr. Wayu Ragwongsiri</p>", unsafe_allow_html=True)
     st.text(" ")
-st.markdown("<h6 style='text-align: center; '>Web Application for Automatic Nucleus Counting 3D Immunofluorescence Tissue Biopsies Using Image Processing</h6>", unsafe_allow_html=True)
+st.markdown("<h6 style='text-align: center; color:#73664f; '>Web Application for Automatic Nucleus Counting 3D Immunofluorescence Tissue Biopsies Using Image Processing</h6>", unsafe_allow_html=True)
 st.text("A PROJECT SUBMITTED IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF BACHELOR OF SCIENCE (COMPUTER ENGINEERING) FACULTY OF ENGINEERING KING MONGKUT’S UNIVERSITY OF TECHNOLOGY THONBURI 2022")
 #        st.info('☝️ Upload a image file')
     # with open(imagee, "rb") as file:

@@ -10,6 +10,8 @@ from matplotlib import cm
 from ML import invert
 from imagemks_function import vis,get_df,labelvis,cell_counting
 from streamlit_image_comparison import image_comparison
+from streamlit_cropper import st_cropper
+import  streamlit_vertical_slider  as svs
 
 
 st.set_page_config(
@@ -36,6 +38,7 @@ def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
 
+realtime_update = True
 
 st.markdown("<h1 style='text-align: center; font-size:400%;'>Welcome to</h1>", unsafe_allow_html=True)
 spacer,colh1,spacer = st.columns([13,11,10])
@@ -49,7 +52,7 @@ st.markdown("<h5 style='text-align: center; '>Web Application for cell counting 
 st.text(" ")
 st.write("#")
 st.text(" ")
-spacer,col1,spacer,col2,spacer = st.columns([1,6,1,4,1])
+spacer,col1,spacer,col2,spacer = st.columns([1,6,1,5,1])
 run = False
 option = 'Image'
 with col1:
@@ -72,7 +75,7 @@ if uploaded_file is not None:
     #     if st.button(' RUN '):
     #         run = True
     # if run:
-    spacer,col3,spacer = st.columns([1,4,5])
+    spacer,col3,spacer = st.columns([1,6,8])
     with col3:
             st.header('Result')
             numbercell = len(df_result. index)
@@ -82,9 +85,37 @@ if uploaded_file is not None:
             """ ###### Number of Nucleus is <span style="background-color: #C9A4A0; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
             csv = convert_df(df_result)
             st.text(" ")
-    spacer,coladjust,spacer = st.columns([1,4,5])
-    with coladjust:
+    spacer,coladjust1,coladjust2,coladjust3,coladjust4,coladjust5,spacer = st.columns([1,2,2,2,2,2,1])
+    with coladjust1:
         width = st.slider('Adjust image width in pixels?', 0, 2000, 1000)
+    with coladjust2:
+        left = st.slider('Zoom from left by percentage of width', 0, 50, 0)
+    with coladjust3:
+        right = st.slider('Zoom from right by percentage of width', 0, 49, 1)
+    with coladjust4:
+        st.write("Zoom from top by percentage of height")
+        top = svs.vertical_slider( 
+                    default_value=1, 
+                    step=1, 
+                    min_value=0, 
+                    max_value=50,
+                    slider_color= '#BD8F8A', #optional
+                    track_color='#F4DBC9', #optional
+                    thumb_color = '#AA706A' #optional
+                    )
+        top = int(top or 0 )
+    with coladjust5:
+        st.write("Zoom from bottom by percentage of height")
+        bottom = svs.vertical_slider( 
+                    default_value=1, 
+                    step=1, 
+                    min_value=0, 
+                    max_value=49,
+                    slider_color= '#BD8F8A', #optional
+                    track_color='#F4DBC9', #optional
+                    thumb_color = '#AA706A' #optional
+                    )
+        bottom = int(bottom or 0 )
 
 
     if option == 'Large Image':
@@ -95,7 +126,10 @@ if uploaded_file is not None:
             spacer,col5,spacer = st.columns([1,7,1])
             with col5:
                 # st.image(imagee, caption='Your result Image',use_column_width= 'always')
-                st.image(imagee, caption='Your result Image',width=width)
+                # st.image(imagee, caption='Your result Image',width=width)
+                box_color = st.color_picker(label="Box Color", value='#0000FF')
+                cropped_img = st_cropper(imagee, realtime_update=realtime_update, box_color=box_color)
+                st.image(cropped_img,width=width)
                 
 
 
@@ -104,10 +138,22 @@ if uploaded_file is not None:
             st.text(" ")
             st.text(" ")
             st.text(" ")
-            spacer,col9,spacer = st.columns([1,11,1])
+            spacer,col9,spacer = st.columns([1,12,1])
+            im =imagee
+            w, h = im.size
+            
+            # Setting the points for cropped image
+            left = w * left/100
+            top = h * top/100
+            right = w - ( w * right/100)
+            bottom = h - (h * bottom/100)
+            
+            # Cropped image of above dimension
+            # (It will not change original image)
+            im1 = im.crop((left, top, right, bottom))
             with col9:
-                image_comparison(imagee,image, label1="Your result Image",label2="Your input Image",starting_position=90,width=width)
-    spacer,coltable,spacer = st.columns([1,11,1])
+                st.image(im1, caption='Your result Image',width=width)
+    spacer,coltable,spacer = st.columns([1,12,1])
     with coltable:
         st.write(df_result)
     spacer,col7,col6,spacer = st.columns([4,5,5,4])

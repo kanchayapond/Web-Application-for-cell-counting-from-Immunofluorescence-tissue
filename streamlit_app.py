@@ -49,6 +49,7 @@ st.write("#")
 st.text(" ")
 spacer,col1,spacer,col2,spacer = st.columns([1,6,1,4,1])
 run = False
+option = 'Image'
 with col1:
     st.header('Upload Your Image')
     uploaded_file = st.file_uploader("Choose a file")
@@ -66,29 +67,27 @@ if uploaded_file is not None:
         st.image(image, caption='Your input Image')
     spacer,colrun = st.columns([3,5])
     with colrun:
-        if st.button('RUN'):
+        if st.button(' RUN '):
             run = True
     if run:
-        spacer,col3,spacer,col4,spacer = st.columns([1,6,1,4,1])
+        spacer,col3,spacer = st.columns([1,4,5])
         with col3:
             st.header('Result')
             numbercell = len(df_result. index)
-            st.markdown(
-            """ ###### Number of Nucleus is <span style="background-color: #C9A4A0; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
-            csv = convert_df(df_result)
-            st.write(df_result)
-            
-        with col4:
-            st.write("#")
-            st.text(" ")
-            st.text(" ")
-            st.text(" ")
-            st.image(imagee, caption='Your result Image')
-        spacer,col5,col6,spacer = st.columns([2,3,4,10])
+            option = st.selectbox('Result Option',('Large Image', 'Compared Image'))
+    if option == 'Large Image':
+        st.write("#")
+        st.text(" ")
+        st.text(" ")
+        st.text(" ")
+        spacer,col5,spacer = st.columns([1,7,1])
         with col5:
+            st.image(imagee, caption='Your result Image',use_column_width= 'always')
+        spacer,col7,col6,spacer = st.columns([2,3,4,10])
+        with col7:
             st.download_button(
                 label="Download data as CSV",
-                data=csv,
+                data=CSV,
                 file_name='Result_Nucleus.csv',
                 mime='text/csv',
             )

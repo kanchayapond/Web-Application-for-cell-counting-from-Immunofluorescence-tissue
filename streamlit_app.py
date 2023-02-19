@@ -10,7 +10,6 @@ from matplotlib import cm
 from ML import invert
 from imagemks_function import vis,get_df,labelvis,cell_counting
 from streamlit_image_comparison import image_comparison
-import zipfile
 
 
 st.set_page_config(

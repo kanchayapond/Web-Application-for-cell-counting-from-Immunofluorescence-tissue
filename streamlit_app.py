@@ -9,6 +9,8 @@ from io import BytesIO
 from matplotlib import cm
 from ML import invert
 from imagemks_function import vis,get_df,labelvis,cell_counting
+from streamlit_image_comparison import image_comparison
+import zipfile
 
 
 st.set_page_config(
@@ -29,6 +31,7 @@ data = {'Nucleus': [1, 2, 3, 4],
         'Location Y': [3.20, 0.21, 1.19, 2.18],
         'Area': [20, 21, 19, 18]}
 df_result = pd.DataFrame(data)
+
 @st.cache
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
@@ -66,45 +69,72 @@ if uploaded_file is not None:
         st.text(" ")
         st.image(image, caption='Your input Image')
     spacer,colrun = st.columns([3,5])
-    with colrun:
-        if st.button(' RUN '):
-            run = True
-    if run:
-        spacer,col3,spacer = st.columns([1,4,5])
-        with col3:
+    # with colrun:
+    #     if st.button(' RUN '):
+    #         run = True
+    # if run:
+    spacer,col3,spacer = st.columns([1,4,5])
+    with col3:
             st.header('Result')
             numbercell = len(df_result. index)
             option = st.selectbox('Result Option',('Large Image', 'Compared Image'))
+            numbercell = len(df_result. index)
+            st.markdown(
+            """ ###### Number of Nucleus is <span style="background-color: #C9A4A0; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
+            csv = convert_df(df_result)
+            st.text(" ")
+    spacer,coladjust,spacer = st.columns([1,4,5])
+    with coladjust:
+        width = st.slider('Adjust image width in pixels?', 0, 2000, 1000)
+
+
     if option == 'Large Image':
-        st.write("#")
-        st.text(" ")
-        st.text(" ")
-        st.text(" ")
-        spacer,col5,spacer = st.columns([1,7,1])
-        with col5:
-            st.image(imagee, caption='Your result Image',use_column_width= 'always')
-        spacer,col7,col6,spacer = st.columns([2,3,4,10])
-        with col7:
+            st.write("#")
+            st.text(" ")
+            st.text(" ")
+            st.text(" ")
+            spacer,col5,spacer = st.columns([1,7,1])
+            with col5:
+                # st.image(imagee, caption='Your result Image',use_column_width= 'always')
+                st.image(imagee, caption='Your result Image',width=width)
+                
+
+
+    else :
+            st.write("#")
+            st.text(" ")
+            st.text(" ")
+            st.text(" ")
+            spacer,col9,spacer = st.columns([1,11,1])
+            with col9:
+                image_comparison(imagee,image, label1="Your result Image",label2="Your input Image",starting_position=90,width=width)
+    spacer,coltable,spacer = st.columns([1,11,1])
+    with coltable:
+        st.write(df_result)
+    spacer,col7,col6,spacer = st.columns([4,5,5,4])
+    with col7:
             st.download_button(
-                label="Download data as CSV",
-                data=CSV,
+                label="Download data as csv",
+                data=csv,
                 file_name='Result_Nucleus.csv',
                 mime='text/csv',
             )
-        with col6:
+    with col6:
             buf = BytesIO()
             imagee.save(buf, format="png")
             byte_im = buf.getvalue()
             btn = st.download_button(
-                label="Download Image",
+                label="Download Image as png",
                 data=byte_im,
                 file_name="result.png",
                 mime="image/png"
                 )
+
 st.text(" ")
 st.write("#")
 st.text(" ")
 st.text(" ")
+
 
 spacer,footer,spacer = st.columns([1,10,1])
 with footer:

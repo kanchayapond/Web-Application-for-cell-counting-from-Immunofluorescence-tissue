@@ -76,7 +76,7 @@ if uploaded_file is not None:
     with col3:
             st.header('Result')
             numbercell = len(df_result. index)
-            option = st.selectbox('Result Option',('Large Image', 'Compared Image'))
+            option = st.selectbox('Result Option',('Large Image', 'Compared Image','Zoomable Image'))
             numbercell = len(df_result. index)
             st.markdown(
             """ ###### Number of Nucleus is <span style="background-color: #C9A4A0; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
@@ -97,7 +97,18 @@ if uploaded_file is not None:
                 # st.image(imagee, caption='Your result Image',use_column_width= 'always')
                 st.image(imagee, caption='Your result Image',width=width)
                 
-
+    if option == 'Zoomable Image':
+            st.write("#")
+            st.text(" ")
+            st.text(" ")
+            st.text(" ")
+            spacer,col5,spacer = st.columns([1,7,1])
+            with col5:
+                # st.image(imagee, caption='Your result Image',use_column_width= 'always')
+                # st.image(imagee, caption='Your result Image',width=width)
+                box_color = st.color_picker(label="Box Color", value='#0000FF')
+                cropped_img = st_cropper(imagee, realtime_update=realtime_update, box_color=box_color)
+                st.image(cropped_img,width=width)
 
     else :
             st.write("#")

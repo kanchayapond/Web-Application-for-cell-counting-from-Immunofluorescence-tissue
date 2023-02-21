@@ -10,6 +10,7 @@ from matplotlib import cm
 from ML import invert
 from imagemks_function import vis,get_df,labelvis,cell_counting
 from streamlit_image_comparison import image_comparison
+from streamlit_cropper import st_cropper
 
 
 st.set_page_config(
@@ -49,7 +50,7 @@ st.markdown("<h5 style='text-align: center; '>Web Application for cell counting 
 st.text(" ")
 st.write("#")
 st.text(" ")
-spacer,col1,spacer,col2,spacer = st.columns([1,6,1,4,1])
+spacer,col1,spacer,col2,spacer = st.columns([1,6,1,5,1])
 run = False
 option = 'Image'
 with col1:
@@ -67,12 +68,12 @@ if uploaded_file is not None:
         st.text(" ")
         st.text(" ")
         st.image(image, caption='Your input Image')
-    spacer,colrun = st.columns([3,5])
+    # spacer,colrun = st.columns([3,5])
     # with colrun:
     #     if st.button(' RUN '):
     #         run = True
     # if run:
-    spacer,col3,spacer = st.columns([1,4,5])
+    spacer,col3,spacer = st.columns([1,6,7])
     with col3:
             st.header('Result')
             numbercell = len(df_result. index)
@@ -82,9 +83,6 @@ if uploaded_file is not None:
             """ ###### Number of Nucleus is <span style="background-color: #C9A4A0; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
             csv = convert_df(df_result)
             st.text(" ")
-    spacer,coladjust,spacer = st.columns([1,4,5])
-    with coladjust:
-        width = st.slider('Adjust image width in pixels?', 0, 2000, 1000)
 
 
     if option == 'Large Image':
@@ -92,33 +90,41 @@ if uploaded_file is not None:
             st.text(" ")
             st.text(" ")
             st.text(" ")
-            spacer,col5,spacer = st.columns([1,7,1])
-            with col5:
-                # st.image(imagee, caption='Your result Image',use_column_width= 'always')
-                st.image(imagee, caption='Your result Image',width=width)
+            spacer,colLarge,spacer = st.columns([1,12,1])
+            with colLarge:
+                st.image(imagee, caption='Your result Image',use_column_width= 'always')
+                # st.image(imagee, caption='Your result Image',width=width)
                 
     if option == 'Zoomable Image':
+            # spacer,coladjustzoom,spacer = st.columns([1,6,7])
+            # with coladjustzoom:
+            #     width = st.slider('Adjust image width in pixels?', 0, 2000, 1000)
+
             st.write("#")
             st.text(" ")
             st.text(" ")
             st.text(" ")
-            spacer,col5,spacer = st.columns([1,7,1])
-            with col5:
+            spacer,colzoom,spacer = st.columns([1,12,1])
+            with colzoom:
                 # st.image(imagee, caption='Your result Image',use_column_width= 'always')
                 # st.image(imagee, caption='Your result Image',width=width)
-                box_color = st.color_picker(label="Box Color", value='#0000FF')
-                cropped_img = st_cropper(imagee, realtime_update=realtime_update, box_color=box_color)
-                st.image(cropped_img,width=width)
+                box_color = st.color_picker(label="Box Color", value='#f991a2')
+                cropped_img = st_cropper(imagee, realtime_update=True, box_color=box_color)
+                st.image(cropped_img,use_column_width= 'always')
 
-    else :
+    if option == 'Compared Image':
+            spacer,coladjustcompare,spacer = st.columns([1,6,7])
+            with coladjustcompare:
+                width = st.slider('Adjust image width in pixels?', 0, 2000, 1000)
+
             st.write("#")
             st.text(" ")
             st.text(" ")
             st.text(" ")
-            spacer,col9,spacer = st.columns([1,11,1])
-            with col9:
+            spacer,colcompare,spacer = st.columns([1,12,1])
+            with colcompare:
                 image_comparison(imagee,image, label1="Your result Image",label2="Your input Image",starting_position=90,width=width)
-    spacer,coltable,spacer = st.columns([1,11,1])
+    spacer,coltable,spacer = st.columns([1,12,1])
     with coltable:
         st.write(df_result)
     spacer,col7,col6,spacer = st.columns([4,5,5,4])

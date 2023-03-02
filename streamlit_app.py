@@ -9,6 +9,8 @@ from io import BytesIO
 from matplotlib import cm
 from ML import invert
 from imagemks_function import vis,get_df,labelvis,cell_counting
+from streamlit_image_comparison import image_comparison
+from streamlit_cropper import st_cropper
 
 
 st.set_page_config(
@@ -29,7 +31,8 @@ data = {'Nucleus': [1, 2, 3, 4],
         'Location Y': [3.20, 0.21, 1.19, 2.18],
         'Area': [20, 21, 19, 18]}
 df_result = pd.DataFrame(data)
-@st.cache
+
+@st.cache_data
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
@@ -47,8 +50,9 @@ st.markdown("<h5 style='text-align: center; '>Web Application for cell counting 
 st.text(" ")
 st.write("#")
 st.text(" ")
-spacer,col1,spacer,col2,spacer = st.columns([1,6,1,4,1])
+spacer,col1,spacer,col2,spacer = st.columns([1,6,1,5,1])
 run = False
+option = 'Image'
 with col1:
     st.header('Upload Your Image')
     uploaded_file = st.file_uploader("Choose a file")
@@ -64,48 +68,89 @@ if uploaded_file is not None:
         st.text(" ")
         st.text(" ")
         st.image(image, caption='Your input Image')
-    spacer,colrun = st.columns([3,5])
-    with colrun:
-        if st.button('RUN'):
-            run = True
-    if run:
-        spacer,col3,spacer,col4,spacer = st.columns([1,6,1,4,1])
-        with col3:
+    # spacer,colrun = st.columns([3,5])
+    # with colrun:
+    #     if st.button(' RUN '):
+    #         run = True
+    # if run:
+    spacer,col3,spacer = st.columns([1,6,7])
+    with col3:
             st.header('Result')
+            numbercell = len(df_result. index)
+            option = st.selectbox('Result Option',('Large Image', 'Compared Image','Zoomable Image'))
             numbercell = len(df_result. index)
             st.markdown(
             """ ###### Number of Nucleus is <span style="background-color: #C9A4A0; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
             csv = convert_df(df_result)
-            st.write(df_result)
-            
-        with col4:
+            st.text(" ")
+
+
+    if option == 'Large Image':
             st.write("#")
             st.text(" ")
             st.text(" ")
             st.text(" ")
-            st.image(imagee, caption='Your result Image')
-        spacer,col5,col6,spacer = st.columns([2,3,4,10])
-        with col5:
+            spacer,colLarge,spacer = st.columns([1,12,1])
+            with colLarge:
+                st.image(imagee, caption='Your result Image',use_column_width= 'always')
+                # st.image(imagee, caption='Your result Image',width=width)
+                
+    if option == 'Zoomable Image':
+            # spacer,coladjustzoom,spacer = st.columns([1,6,7])
+            # with coladjustzoom:
+            #     width = st.slider('Adjust image width in pixels?', 0, 2000, 1000)
+
+            st.write("#")
+            st.text(" ")
+            st.text(" ")
+            st.text(" ")
+            spacer,colzoom,spacer = st.columns([1,12,1])
+            with colzoom:
+                # st.image(imagee, caption='Your result Image',use_column_width= 'always')
+                # st.image(imagee, caption='Your result Image',width=width)
+                box_color = st.color_picker(label="Box Color", value='#f991a2')
+                cropped_img = st_cropper(imagee, realtime_update=True, box_color=box_color)
+                st.image(cropped_img,use_column_width= 'always')
+
+    if option == 'Compared Image':
+            spacer,coladjustcompare,spacer = st.columns([1,6,7])
+            with coladjustcompare:
+                width = st.slider('Adjust image width in pixels?', 0, 2000, 1000)
+
+            st.write("#")
+            st.text(" ")
+            st.text(" ")
+            st.text(" ")
+            spacer,colcompare,spacer = st.columns([1,12,1])
+            with colcompare:
+                image_comparison(imagee,image, label1="Your result Image",label2="Your input Image",starting_position=90,width=width)
+    spacer,coltable,spacer = st.columns([1,12,1])
+    with coltable:
+        st.write(df_result)
+    spacer,col7,col6,spacer = st.columns([4,5,5,4])
+    with col7:
             st.download_button(
-                label="Download data as CSV",
+                label="Download data as csv",
                 data=csv,
                 file_name='Result_Nucleus.csv',
                 mime='text/csv',
             )
-        with col6:
+    with col6:
             buf = BytesIO()
             imagee.save(buf, format="png")
             byte_im = buf.getvalue()
             btn = st.download_button(
-                label="Download Image",
+                label="Download Image as png",
                 data=byte_im,
                 file_name="result.png",
                 mime="image/png"
                 )
+
 st.text(" ")
 st.write("#")
 st.text(" ")
 st.text(" ")
+
 
 spacer,footer,spacer = st.columns([1,10,1])
 with footer:

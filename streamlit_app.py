@@ -38,15 +38,13 @@ def convert_df(df):
     return df.to_csv().encode('utf-8')
 
 
-st.markdown("<h1 style='text-align: center; font-size:400%;'>Welcome to</h1>", unsafe_allow_html=True)
-spacer,colh1,spacer = st.columns([13,11,10])
-with colh1:
-    imagehead = Image.open('logi-removebg.png')
-    st.image(imagehead,width=269)
+st.markdown("<h1 style='text-align: center; '>Neucleus counting from Immunofluorescence tissue</h1>", unsafe_allow_html=True)
+spacer,coldes,spacer = st.columns([1,12,1])
+with coldes:
+    st.markdown("<h5 style='text-align: center; '>คำอธิบายจ้า~ ยาวๆ longlong ONCE UPON A TIME a girl named Cinderella lived with her stepmother and two stepsisters.  Poor Cinderella had to work hard all day long so the others could rest. It was she who had to wake up each morning when it was still dark and cold to start the fire.  It was she who cooked the meals. It was she who kept the fire going. The poor girl could not stay clean, from all the ashes and cinders by the fire. </h5>", unsafe_allow_html=True)
 spacer,colh2,spacer = st.columns([1,2,1])
 with colh2:
     st.markdown("<hr align='center'; width=100%;size='-1'>  ", unsafe_allow_html=True)
-st.markdown("<h5 style='text-align: center; '>Web Application for cell counting from Immunofluorescence tissue</h4>", unsafe_allow_html=True)
 st.text(" ")
 st.write("#")
 st.text(" ")
@@ -73,16 +71,21 @@ if uploaded_file is not None:
     #     if st.button(' RUN '):
     #         run = True
     # if run:
+    spacer,colhbreak,spacer = st.columns([1,9,1])
+    with colhbreak:
+        st.markdown("<hr align='center'; width=100%;size='-1'>  ", unsafe_allow_html=True)
     spacer,col3,spacer = st.columns([1,6,7])
     with col3:
             st.header('Result')
             numbercell = len(df_result. index)
-            option = st.selectbox('Result Option',('Large Image', 'Compared Image','Zoomable Image'))
+            option = st.selectbox('Result Option',('Large Image', 'Zoomable Image'))
             numbercell = len(df_result. index)
             st.markdown(
             """ ###### Number of Nucleus is <span style="background-color: #C9A4A0; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
             csv = convert_df(df_result)
             st.text(" ")
+    
+
 
 
     if option == 'Large Image':
@@ -112,18 +115,6 @@ if uploaded_file is not None:
                 cropped_img = st_cropper(imagee, realtime_update=True, box_color=box_color)
                 st.image(cropped_img,use_column_width= 'always')
 
-    if option == 'Compared Image':
-            spacer,coladjustcompare,spacer = st.columns([1,6,7])
-            with coladjustcompare:
-                width = st.slider('Adjust image width in pixels?', 0, 2000, 1000)
-
-            st.write("#")
-            st.text(" ")
-            st.text(" ")
-            st.text(" ")
-            spacer,colcompare,spacer = st.columns([1,12,1])
-            with colcompare:
-                image_comparison(imagee,image, label1="Your result Image",label2="Your input Image",starting_position=90,width=width)
     spacer,coltable,spacer = st.columns([1,12,1])
     with coltable:
         st.write(df_result)
@@ -145,6 +136,36 @@ if uploaded_file is not None:
                 file_name="result.png",
                 mime="image/png"
                 )
+else :
+    st.text(" ")
+    st.write("#")
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
+    st.write("#")
+    st.text(" ")
+    st.text(" ")
+    st.write("#")
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
+    st.write("#")
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
+    st.write("#")
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
+    st.write("#")
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
+    st.write("#")
+    st.text(" ")
+    st.text(" ")
 
 st.text(" ")
 st.write("#")

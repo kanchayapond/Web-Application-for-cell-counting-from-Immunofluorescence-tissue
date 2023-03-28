@@ -9,20 +9,11 @@ st.write("# Welcome to Streamlit! 👋")
 
 st.sidebar.success("Select a demo above.")
 
-st.markdown(
-    """
-    Streamlit is an open-source app framework built specifically for
-    Machine Learning and Data Science projects.
-    **👈 Select a demo from the sidebar** to see some examples
-    of what Streamlit can do!
-    ### Want to learn more?
-    - Check out [streamlit.io](https://streamlit.io)
-    - Jump into our [documentation](https://docs.streamlit.io)
-    - Ask a question in our [community
-        forums](https://discuss.streamlit.io)
-    ### See more complex demos
-    - Use a neural net to [analyze the Udacity Self-driving Car Image
-        Dataset](https://github.com/streamlit/demo-self-driving)
-    - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-"""
-)
+st.markdown("<h1 style='text-align: center; '>Neucleus counting from Immunofluorescence tissue</h1>", unsafe_allow_html=True)
+spacer,coldes,spacer = st.columns([1,12,1])
+with coldes:
+    st.markdown("<h5 style='text-align: center; '>คำอธิบายจ้า~ ยาวๆ longlong ONCE UPON A TIME a girl named Cinderella lived with her stepmother and two stepsisters.  Poor Cinderella had to work hard all day long so the others could rest. It was she who had to wake up each morning when it was still dark and cold to start the fire.  It was she who cooked the meals. It was she who kept the fire going. The poor girl could not stay clean, from all the ashes and cinders by the fire. </h5>", unsafe_allow_html=True)
+spacer,colh2,spacer = st.columns([1,2,1])
+with colh2:
+    st.markdown("<hr align='center'; width=100%;size='-1'>  ", unsafe_allow_html=True)
+st.text(" ")

@@ -1,0 +1,5 @@
+section[data-testid="stButton"] div.stButton button {
+    background-color: rgb(207, 171, 171);
+    width: 900px;
+}
+

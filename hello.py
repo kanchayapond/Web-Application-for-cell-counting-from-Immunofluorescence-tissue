@@ -6,6 +6,16 @@ st.set_page_config(
 )
 
 st.sidebar.success("Select above.")
+st.sidebar.title('Sidebar')
+st.sidebar.header('Upload Your Image')
+uploaded_file = st.sidebar.file_uploader("Choose a file")
+
+# Check if file has been uploaded
+if uploaded_file is not None:
+    st.session_state['image'] = uploaded_file
+if "shared" not in st.session_state:
+   st.session_state["shared"] = True
+
 
 st.markdown("<h1 style='text-align: center; '>Neucleus counting from Immunofluorescence tissue</h1>", unsafe_allow_html=True)
 spacer,coldes,spacer = st.columns([1,10,1])

@@ -75,10 +75,6 @@ if image is not None:
     img , araaylable = cell_counting(image)
     imagee = Image.fromarray(img)
     df_result = get_df(araaylable) 
-    st.text(" ")
-    st.text(" ")
-    st.text(" ")
-    st.text(" ")
     # spacer,colrun = st.columns([3,5])
     # with colrun:
     #     if st.button(' RUN '):
@@ -97,12 +93,8 @@ if image is not None:
             option = st.selectbox('Result Option',('Large Image', 'Zoomable Image'))
             numbercell = len(df_result. index)
             st.markdown(
-            """ ###### Number of Nucleus is <span style="background-color: #C9A4A0; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
+            """ ##### Number of Nucleus is <span style="background-color: #A4A4A4; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
             csv = convert_df(df_result)
-            st.text(" ")
-    
-
-
 
     if option == 'Large Image':
             st.write("#")

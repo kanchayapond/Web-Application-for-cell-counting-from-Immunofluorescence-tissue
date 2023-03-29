@@ -69,7 +69,7 @@ st.sidebar.header("Your Uploaded Image")
 st.sidebar.image(image)
 
 
-st.markdown("<h1 style='text-align: center; '>Neucleus counting from Immunofluorescence tissue</h1>", unsafe_allow_html=True)
+# st.markdown("<h1 style='text-align: center; '>Neucleus counting from Immunofluorescence tissue</h1>", unsafe_allow_html=True)
 if image is not None:
     image = Image.open(image)
     img , araaylable = cell_counting(image)
@@ -84,12 +84,15 @@ if image is not None:
     #     if st.button(' RUN '):
     #         run = True
     # if run:
-    spacer,colhbreak,spacer = st.columns([1,9,1])
-    with colhbreak:
-        st.markdown("<hr align='center'; width=100%;size='-1'>  ", unsafe_allow_html=True)
     spacer,col3,spacer = st.columns([1,6,7])
     with col3:
             st.header('Result')
+
+    spacer,colhbreak,spacer = st.columns([1,12,1])
+    with colhbreak:
+        st.markdown("<hr align='center'; width=100%;size='-1'>  ", unsafe_allow_html=True)
+    spacer,colrsult,spacer = st.columns([1,6,7])
+    with colrsult:
             numbercell = len(df_result. index)
             option = st.selectbox('Result Option',('Large Image', 'Zoomable Image'))
             numbercell = len(df_result. index)

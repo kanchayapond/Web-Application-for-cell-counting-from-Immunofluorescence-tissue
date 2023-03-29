@@ -13,7 +13,6 @@ from imagemks_function import vis,get_df,labelvis,cell_counting
 from streamlit_image_comparison import image_comparison
 from streamlit_cropper import st_cropper
 
-
 st.set_page_config(page_title="Upload", page_icon="⬆️", layout="wide")
 
 st.sidebar.header("Upload")
@@ -33,6 +32,8 @@ def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
 
+if "shared" not in st.session_state:
+   st.session_state["shared"] = True
 
 st.markdown("<h1 style='text-align: center; '>Neucleus counting from Immunofluorescence tissue</h1>", unsafe_allow_html=True)
 spacer,coldes,spacer = st.columns([1,12,1])
@@ -52,11 +53,9 @@ with col1:
     uploaded_file = st.file_uploader("Choose a file")
 
 if uploaded_file is not None:
-    image = Image.open(uploaded_file)
-    img , araaylable = cell_counting(image)
-    imagee = Image.fromarray(img)
-    df_result = get_df(araaylable)
     with col2:
+        st.session_state['image'] = uploaded_file
+        image = Image.open(uploaded_file)
         st.text(" ")
         st.text(" ")
         st.text(" ")
@@ -71,67 +70,6 @@ if uploaded_file is not None:
     with colhbreak:
         st.markdown("<hr align='center'; width=100%;size='-1'>  ", unsafe_allow_html=True)
     spacer,col3,spacer = st.columns([1,6,7])
-    with col3:
-            st.header('Result')
-            numbercell = len(df_result. index)
-            option = st.selectbox('Result Option',('Large Image', 'Zoomable Image'))
-            numbercell = len(df_result. index)
-            st.markdown(
-            """ ###### Number of Nucleus is <span style="background-color: #C9A4A0; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell))  , unsafe_allow_html=True)    
-            csv = convert_df(df_result)
-            st.text(" ")
-    
-
-
-
-    if option == 'Large Image':
-            st.write("#")
-            st.text(" ")
-            st.text(" ")
-            st.text(" ")
-            spacer,colLarge,spacer = st.columns([1,12,1])
-            with colLarge:
-                st.image(imagee, caption='Your result Image',use_column_width= 'always')
-                # st.image(imagee, caption='Your result Image',width=width)
-                
-    if option == 'Zoomable Image':
-            # spacer,coladjustzoom,spacer = st.columns([1,6,7])
-            # with coladjustzoom:
-            #     width = st.slider('Adjust image width in pixels?', 0, 2000, 1000)
-
-            st.write("#")
-            st.text(" ")
-            st.text(" ")
-            st.text(" ")
-            spacer,colzoom,spacer = st.columns([1,12,1])
-            with colzoom:
-                # st.image(imagee, caption='Your result Image',use_column_width= 'always')
-                # st.image(imagee, caption='Your result Image',width=width)
-                box_color = st.color_picker(label="Box Color", value='#f991a2')
-                cropped_img = st_cropper(imagee, realtime_update=True, box_color=box_color)
-                st.image(cropped_img,use_column_width= 'always')
-
-    spacer,coltable,spacer = st.columns([1,12,1])
-    with coltable:
-        st.write(df_result)
-    spacer,col7,col6,spacer = st.columns([4,5,5,4])
-    with col7:
-            st.download_button(
-                label="Download data as csv",
-                data=csv,
-                file_name='Result_Nucleus.csv',
-                mime='text/csv',
-            )
-    with col6:
-            buf = BytesIO()
-            imagee.save(buf, format="png")
-            byte_im = buf.getvalue()
-            btn = st.download_button(
-                label="Download Image as png",
-                data=byte_im,
-                file_name="result.png",
-                mime="image/png"
-                )
 else :
     st.text(" ")
     st.write("#")

@@ -11,6 +11,7 @@ from ML import invert
 from imagemks_function import vis,get_df,labelvis,cell_counting
 from streamlit_image_comparison import image_comparison
 from streamlit_cropper import st_cropper
+# import img
 
 st.set_page_config(page_title="Result", page_icon="⬇️",layout="wide")
 
@@ -34,8 +35,26 @@ df_result = pd.DataFrame(data)
 def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
+    
+
 st.markdown("<h1 style='text-align: center; '>Neucleus counting from Immunofluorescence tissue</h1>", unsafe_allow_html=True)
-spacer,colhbreak,spacer = st.columns([1,9,1])
+image = st.session_state['image'] 
+if image is not None:
+    image = Image.open(image)
+    img , araaylable = cell_counting(image)
+    imagee = Image.fromarray(img)
+    df_result = get_df(araaylable) 
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
+    st.image(image, caption='Your input Image')
+    # spacer,colrun = st.columns([3,5])
+    # with colrun:
+    #     if st.button(' RUN '):
+    #         run = True
+    # if run:
+    spacer,colhbreak,spacer = st.columns([1,9,1])
     with colhbreak:
         st.markdown("<hr align='center'; width=100%;size='-1'>  ", unsafe_allow_html=True)
     spacer,col3,spacer = st.columns([1,6,7])
@@ -135,6 +154,7 @@ st.text(" ")
 st.write("#")
 st.text(" ")
 st.text(" ")
+
 
 spacer,footer,spacer = st.columns([1,10,1])
 with footer:

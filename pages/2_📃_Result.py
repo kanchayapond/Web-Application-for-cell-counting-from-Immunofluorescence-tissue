@@ -64,9 +64,14 @@ def convert_df(df):
     # IMPORTANT: Cache the conversion to prevent computation on every rerun
     return df.to_csv().encode('utf-8')
 
-image = st.session_state['image'] 
-st.sidebar.header("Your Uploaded Image")
-st.sidebar.image(image)
+if 'image' not in st.session_state:
+    image = None
+else:
+    image = st.session_state['image'] 
+    st.sidebar.header("Your Uploaded Image")
+    st.sidebar.image(image)
+# elif KeyError():
+#     image = None
 
 
 # st.markdown("<h1 style='text-align: center; '>Neucleus counting from Immunofluorescence tissue</h1>", unsafe_allow_html=True)
@@ -97,10 +102,6 @@ if image is not None:
             csv = convert_df(df_result)
 
     if option == 'Large Image':
-            st.write("#")
-            st.text(" ")
-            st.text(" ")
-            st.text(" ")
             spacer,colLarge,spacer = st.columns([1,12,1])
             with colLarge:
                 st.image(imagee, caption='Your result Image',use_column_width= 'always')
@@ -110,11 +111,6 @@ if image is not None:
             # spacer,coladjustzoom,spacer = st.columns([1,6,7])
             # with coladjustzoom:
             #     width = st.slider('Adjust image width in pixels?', 0, 2000, 1000)
-
-            st.write("#")
-            st.text(" ")
-            st.text(" ")
-            st.text(" ")
             spacer,colzoom,spacer = st.columns([1,12,1])
             with colzoom:
                 # st.image(imagee, caption='Your result Image',use_column_width= 'always')
@@ -148,11 +144,12 @@ if image is not None:
     st.text(" ")
     st.text(" ")
     st.text(" ")
-    spacer,Button,spacer = st.columns([3,2,3])
-    with Button:
-        if st.button("Back to Upload Page"):
-            nav_page("upload")
-# else :
+    # spacer,Button,spacer = st.columns([3,2,3])
+    # with Button:
+    #     if st.button("Back to Home Page"):
+    #         nav_page("Home")
+else :
+    st.warning('You didn\'t upload image. Please upload image first at the Home page.', icon="⚠️")
 #     st.text(" ")
 #     st.write("#")
 #     st.text(" ")

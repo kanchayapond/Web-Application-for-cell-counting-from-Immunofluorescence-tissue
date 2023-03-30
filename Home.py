@@ -2,6 +2,8 @@ import streamlit as st
 from streamlit.components.v1 import html
 from PIL import Image
 import base64
+import streamlit.components.v1 as components
+
 
 
 def nav_page(page_name, timeout_secs=3):
@@ -31,18 +33,28 @@ def nav_page(page_name, timeout_secs=3):
 
 
 st.set_page_config(
-    page_title="Hello",
+    page_title="Home",
     page_icon="👋", layout="wide"
 )
-
 st.sidebar.header('Upload Your Image')
+# expander = st.sidebar.expander("About Your Upload Image")
+st.sidebar.write("For now, we support only upload DAPI immunofluorescence tissue images in PNG, JPEG, or TIF file format. Additionally, the file size must not exceed 10 MB, and only one image can be uploaded at a time. ")
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
+    # styles = {'material-icons':{'color': 'red'},
+    #       'text-icon-link-close-container': {'box-shadow': '#3896de 0px 4px'},
+    #       'notification-text': {'':''},
+    #       'close-button':{'':''},
+    #       'link':{'':''}}
+
+    # st.sidebar.custom_notification_box(icon='info', textDisplay='You can only upload image with...', externalLink='more info', url='#', styles=styles, key="foo")
     st.session_state['image'] = uploaded_file
     image = Image.open(uploaded_file)
     st.sidebar.image(image, caption='Your input Image')
     if st.sidebar.button("Start Analysis and go to Result page"):
         nav_page("Result")
+    
+
 
 st.markdown(""" <style> div.stButton > button:first-child { background-color: rgb(255 , 255 , 255);width: 100% } </style>""", unsafe_allow_html=True)
 file_ = open("img/ezgif-2-d384fada9f.gif", "rb")

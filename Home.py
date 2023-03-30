@@ -39,6 +39,7 @@ st.set_page_config(
 st.sidebar.header('Upload Your Image')
 # expander = st.sidebar.expander("About Your Upload Image")
 st.sidebar.write("For now, we support only upload DAPI immunofluorescence tissue images in PNG, JPEG, or TIF file format. Additionally, the file size must not exceed 10 MB, and only one image can be uploaded at a time. ")
+exam = Image.open('img/example.png')
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
     # styles = {'material-icons':{'color': 'red'},
@@ -53,6 +54,11 @@ if uploaded_file is not None:
     st.sidebar.image(image, caption='Your input Image')
     if st.sidebar.button("Start Analysis and go to Result page"):
         nav_page("Result")
+else :
+    st.sidebar.image(exam,width=150)    
+
+
+
     
 
 

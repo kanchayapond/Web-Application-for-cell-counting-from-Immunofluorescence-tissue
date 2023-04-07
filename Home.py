@@ -192,10 +192,7 @@ with Authors:
 
 with licenses:
     st.markdown("<h3 style='text-align: left;   '>Licenses : </h3>  ", unsafe_allow_html=True)
-    st.text("- Python")
-    st.text("- Streamlit")
-    st.text("- PyTorch")
-    st.text("- TensorFlow")
+    st.markdown("- https://github.com/kanchayapond/Web-Application-for-cell-counting-from-Immunofluorescence-tissue/blob/main/LICENSE",unsafe_allow_html=True)
 
 
 spacer,foottt,spacer = st.columns([1,41,1])

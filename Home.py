@@ -172,14 +172,30 @@ st.text(" ")
 #     st.text(" ")
 # st.markdown("<h6 style='text-align: center; color:#73664f; '>Web Application for Automatic Nucleus Counting 3D Immunofluorescence Tissue Biopsies Using Image Processing</h6>", unsafe_allow_html=True)
 # st.markdown("<p style='text-align: center; color:#73664f; font-size:80%; '>A PROJECT SUBMITTED IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF BACHELOR OF SCIENCE (COMPUTER ENGINEERING) FACULTY OF ENGINEERING KING MONGKUT’S UNIVERSITY OF TECHNOLOGY THONBURI 2022</p>", unsafe_allow_html=True)
-spacer,Authors,spacer = st.columns([1,41,1])
-with Authors:
+spacer,footer,spacer = st.columns([1,41,1])
+with footer:
     st.markdown("<hr align='center' width='100%;' size='10'>  ", unsafe_allow_html=True)
 
+spacer,Authors,spacer,licenses,spacer = st.columns([1,25,1,15,1])
+with Authors:
     st.markdown("<h3 style='text-align: left;   '>Authors : </h3>  ", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: left;  '>Please feel free to contact us with any issues, comments, or questions.</p>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left;  '>Ms. Kanchayapond Seajoong</p>", unsafe_allow_html=True)
+    st.markdown("- Email: kanchayapond.earn@mail.kmutt.ac.th",unsafe_allow_html=True)
+    st.markdown("- Github: https://github.com/kanchayapond",unsafe_allow_html=True)
     st.markdown("<p style='text-align: left; '>Ms. Nichapat Nobnorb</p>", unsafe_allow_html=True)
+    st.markdown("- Email: nichapat.best@mail.kmutt.ac.th",unsafe_allow_html=True)
+    st.markdown("- Github: https://github.com/NichapatNobnorb",unsafe_allow_html=True)
     st.markdown("<p style='text-align: left;'>Mr. Wayu Ragwongsiri</p>", unsafe_allow_html=True)
+    st.markdown("- Email: wayu.windy@mail.kmutt.ac.th",unsafe_allow_html=True)
+    st.markdown("- Github: https://github.com/cusniwtt",unsafe_allow_html=True)
+
+with licenses:
+    st.markdown("<h3 style='text-align: left;   '>Licenses : </h3>  ", unsafe_allow_html=True)
+    st.text("- Python")
+    st.text("- Streamlit")
+    st.text("- PyTorch")
+    st.text("- TensorFlow")
 
 
 spacer,foottt,spacer = st.columns([1,41,1])

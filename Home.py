@@ -4,8 +4,6 @@ from PIL import Image
 import base64
 import streamlit.components.v1 as components
 
-
-
 def nav_page(page_name, timeout_secs=3):
     nav_script = """
         <script type="text/javascript">

@@ -36,7 +36,10 @@ st.set_page_config(
 )
 st.sidebar.header('Upload Your Image')
 # expander = st.sidebar.expander("About Your Upload Image")
-st.sidebar.write("For now, we support only upload DAPI immunofluorescence tissue images in PNG, JPEG, or TIF file format. Additionally, the file size must not exceed 10 MB, and only one image can be uploaded at a time. ")
+st.sidebar.write("- Image input format: PNG or TIFF")
+st.sidebar.write("- Maximum file size: 10 MB")
+st.sidebar.write("- Image resolution: width between 300-400 pixels, height between 240-340 pixels")
+st.sidebar.write("- Output resolution: 319x255 pixels.")
 exam = Image.open('img/example.png')
 uploaded_file = st.sidebar.file_uploader("Choose a file")
 if uploaded_file is not None:
@@ -52,10 +55,6 @@ if uploaded_file is not None:
     st.sidebar.image(image, caption='Your input Image')
     if st.sidebar.button("Start Analysis and go to Result page"):
         nav_page("Result")
-else :
-    st.sidebar.image(exam,width=150)    
-
-
 
     
 
@@ -104,6 +103,7 @@ with coldes:
     # st.markdown("<style>div.a {text-indent: 0px;\}</style><div class='a'><p style='font-size:120%;' >Go to the upload page by clicking on the sidebar or the button 'Start using this Web Application' below this page. </p></div>", unsafe_allow_html=True)
     st.markdown("<style>div.a {text-indent: 0px;\}</style><div class='a'><h4>Step 1 : Upload your image</h4></div>", unsafe_allow_html=True)
     st.markdown("<style>div.a {text-indent: 0px;\}</style><div class='a'><p style='font-size:120%;' >Upload your DAPI immunofluorescence tissue biopsy image by clicking the 'Browse file' button and selecting the image file from your computer. Once you have selected the file, click the 'Upload' button to upload the image. </p></div>", unsafe_allow_html=True)
+    st.markdown("<style>div.a {text-indent: 0px;\}</style><div class='a'><p style='font-size:90%;' >Note: The model was trained using images with a resolution of width between 300-400 pixels and height between 240-340 pixels. Therefore, it is recommended to use images with a similar resolution for the input.</p></div>", unsafe_allow_html=True)
     # step2 = Image.open('img/step2.png')
     # st.image(step2)    
     st.markdown("<style>div.a {text-indent: 0px;\}</style><div class='a'><h4>Step 2 : Check the uploaded image and go to Result page</h4></div>", unsafe_allow_html=True)
@@ -129,20 +129,19 @@ with coldes:
 with colimg:
     # Upload = Image.open('img/Upload.png')
     # st.image(Upload , use_column_width= 'always')
+    st.image(exam)    
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
+    st.text(" ")
     Result = Image.open('img/Result.png')
     st.image(Result , use_column_width= 'always')
 
-
-st.text(" ")
-st.text(" ")
-st.text(" ")
-st.text(" ")
 # spacer,Button,spacer = st.columns([3,2,3])
 # with Button:
 #     if st.button("Start using this Web Application"):
 #         nav_page("Upload")
 
-
 st.text(" ")
 st.text(" ")
 st.text(" ")
@@ -150,11 +149,7 @@ st.text(" ")
 st.text(" ")
 st.text(" ")
 st.text(" ")
-st.write("#")
 st.text(" ")
-st.text(" ")
-st.text(" ")
-st.write("#")
 st.text(" ")
 st.text(" ")
 # spacer,footer,spacer = st.columns([1,10,1])
@@ -195,9 +190,7 @@ with licenses:
 
 spacer,foottt,spacer = st.columns([1,41,1])
 with foottt:
-    st.text(" ")
-    st.write("#")
-    st.text(" ")
+    st.markdown("<hr align='center' width='100%;' size='10'>  ", unsafe_allow_html=True)
     # st.markdown("<hr align='center' width='100%;' size='10'>  ", unsafe_allow_html=True)
     st.markdown("<h6 style='text-align: left;  '>Web Application for Automatic Nucleus Counting 3D Immunofluorescence Tissue Biopsies Using Image Processing</h6>", unsafe_allow_html=True)
     st.markdown("<p style='text-align: left;  font-size:80%; '>A PROJECT SUBMITTED IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF BACHELOR OF SCIENCE (COMPUTER ENGINEERING) FACULTY OF ENGINEERING KING MONGKUT’S UNIVERSITY OF TECHNOLOGY THONBURI 2022</p>", unsafe_allow_html=True)

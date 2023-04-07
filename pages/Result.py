@@ -76,10 +76,9 @@ if image is not None:
     spacer,col3,spacer = st.columns([1,6,7])
     with col3:
             st.header('Result')
-
     spacer,colhbreak,spacer = st.columns([1,12,1])
     with colhbreak:
-        st.markdown("<hr align='center'; width=100%;size='-1'>  ", unsafe_allow_html=True)
+        st.markdown("<hr align='center'; width=100%;size='0'>  ", unsafe_allow_html=True)
     spacer,colrsult,spacer = st.columns([1,6,7])
     with colrsult:
             numbercell = len(df_result. index)
@@ -102,27 +101,33 @@ if image is not None:
                 cropped_img = st_cropper(imagee, realtime_update=True, box_color=box_color)
                 st.image(cropped_img,use_column_width= 'always')
 
-    spacer,coltable,spacer = st.columns([1,12,1])
+    spacer,coltable,spacer,col7,spacer = st.columns([1,7,1,5,1])
     with coltable:
         st.write(df_result)
-    spacer,col7,col6,spacer = st.columns([4,5,5,4])
     with col7:
-            st.download_button(
-                label="Download data as csv",
-                data=csv,
-                file_name='Result_Nucleus.csv',
-                mime='text/csv',
+        st.text(" ")
+        st.text(" ")
+        st.text(" ")
+        st.text(" ")
+
+        st.download_button(
+            label="Download data as csv",
+            data=csv,
+            file_name='Result_Nucleus.csv',
+            mime='text/csv',
+        )
+        buf = BytesIO()
+        imagee.save(buf, format="png")
+        byte_im = buf.getvalue()
+        st.text(" ")
+        st.text(" ")
+
+        btn = st.download_button(
+            label="Download Image as png",
+            data=byte_im,
+            file_name="result.png",
+            mime="image/png"
             )
-    with col6:
-            buf = BytesIO()
-            imagee.save(buf, format="png")
-            byte_im = buf.getvalue()
-            btn = st.download_button(
-                label="Download Image as png",
-                data=byte_im,
-                file_name="result.png",
-                mime="image/png"
-                )
     st.text(" ")
     st.text(" ")
     st.text(" ")

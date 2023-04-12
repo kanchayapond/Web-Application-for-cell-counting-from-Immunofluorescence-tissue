@@ -38,7 +38,7 @@ st.sidebar.header('Upload Your Image')
 # expander = st.sidebar.expander("About Your Upload Image")
 st.sidebar.write("For now, we support only upload DAPI immunofluorescence tissue images in PNG, JPEG, or TIF file format. Additionally, the file size must not exceed 10 MB, and only one image can be uploaded at a time. ")
 exam = Image.open('img/example.png')
-uploaded_file = st.sidebar.file_uploader("Choose a file")
+uploaded_file = st.sidebar.file_uploader("Choose a file", type=['png','jpg','jpeg','tif','tiff'])
 if uploaded_file is not None:
     # styles = {'material-icons':{'color': 'red'},
     #       'text-icon-link-close-container': {'box-shadow': '#3896de 0px 4px'},
@@ -185,7 +185,7 @@ with Authors:
     st.markdown("- Email: nichapat.best@mail.kmutt.ac.th",unsafe_allow_html=True)
     st.markdown("- Github: https://github.com/NichapatNobnorb",unsafe_allow_html=True)
     st.markdown("<p style='text-align: left;'>Mr. Wayu Ragwongsiri</p>", unsafe_allow_html=True)
-    st.markdown("- Email: wayu.windy@mail.kmutt.ac.th",unsafe_allow_html=True)
+    st.markdown("- Email: wayu.qwertyuiop@mail.kmutt.ac.th",unsafe_allow_html=True)
     st.markdown("- Github: https://github.com/cusniwtt",unsafe_allow_html=True)
 
 with licenses:

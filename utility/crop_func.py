@@ -1,0 +1,84 @@
+import streamlit as st
+from PIL import Image
+import numpy as np
+import timeit
+
+from utility.logger import setup_logging
+if 'logger' not in st.session_state:
+    st.session_state['logger'] = setup_logging()
+    st.session_state['logger'].info('Utility loaded')
+
+# Check resolution of image
+# If resolution is correct, save image to temp folder pepare to analyze
+# If resolution is not correct, crop and save batch image to temp folder for prepare to analyze
+def check_resolution(img):
+    width, height = img.size
+    width, height = int(width), int(height)
+    st.session_state['image_size'] = [width, height]
+    if 300 < width < 400:
+        if 240 < height < 340:
+            # State update
+            st.session_state['is_batch'] = False
+            st.session_state['logger'].info("st.session_state['is_batch'] = {}".format(st.session_state['is_batch']))
+            # Save image
+            img.save('temp/{}.jpg'.format(st.session_state['image_name'][:-4]))
+            return st.session_state['is_batch']
+    else:
+        st.session_state['is_batch'] = True
+        croping(img, width, height)
+        return st.session_state['is_batch']
+
+def croping(img, r_width, r_height):
+    # State update
+    st.session_state['logger'].info("st.session_state['is_batch'] = {}".format(st.session_state['is_batch']))
+    st.session_state['logger'].info('Start deconstructing image...')
+
+    # Crop image
+    i_width, i_height = 319, 255
+    n_width, n_height = [(r_width//i_width) + 1, (r_height//i_height) + 1]
+    # If use batch array
+    #batch = np.zeros((n_width * n_height, i_height, i_width, 3), dtype=np.uint8)
+    st.session_state['batch_size'] = [n_width, n_height]
+    st.session_state['logger'].info('Batch size: {}'.format(st.session_state['batch_size']))
+
+    # Batch generator
+    start_time = timeit.default_timer()
+    for i in range(n_width):
+        for j in range(n_height):
+            x, y = i * i_width, j * i_height
+            if x + i_width > r_width:
+                x = r_width - i_width
+            if y + i_height > r_height:
+                y = r_height - i_height
+            crop = img.crop((x, y, x + i_width, y + i_height))
+            # Append to batch
+            #batch[i * n_height + j] = np.array(crop)
+            # Save batch image
+            Image.fromarray(np.array(crop)).save('temp/{}_{}_{}.jpg'.format(st.session_state['image_name'][:-4], i, j))
+    end_time = timeit.default_timer()
+    st.session_state['logger'].info('Deconstructing image done in {} seconds'.format(end_time - start_time))
+
+# Reconstruct image from batch to single image
+def reconstruct(img_list):
+    # State update
+    st.session_state['logger'].info('Start reconstructing image...')
+    st.session_state['logger'].info('Batch size: {}'.format(st.session_state['batch_size']))
+    # Get image size
+    width, height = st.session_state['image_size']
+    i_width, i_height = 319, 255
+    n_width, n_height = st.session_state['batch_size']
+    # Reconstruct image
+    img = np.zeros((height, width, 3), dtype=np.uint8)
+    start_time = timeit.default_timer()
+    for i in range(n_width):
+        for j in range(n_height):
+            x, y = i * i_width, j * i_height
+            if x + i_width > width:
+                x = width - i_width
+            if y + i_height > height:
+                y = height - i_height
+            img[y:y + i_height, x:x + i_width] = img_list[i * n_height + j]
+    end_time = timeit.default_timer()
+    st.session_state['logger'].info('Reconstructing image done in {} seconds'.format(end_time - start_time))
+    img = Image.fromarray(img)
+    return img

@@ -91,8 +91,8 @@ six==1.16.0
 smmap==5.0.0
 stack-data==0.6.2
 streamlit==1.21.0
-streamlit-cropper==0.2.1
-streamlit-image-comparison==0.0.4
+#streamlit-cropper==0.2.1
+#streamlit-image-comparison==0.0.4
 sympy==1.11.1
 tenacity==8.2.2
 tensorboard==2.12.1

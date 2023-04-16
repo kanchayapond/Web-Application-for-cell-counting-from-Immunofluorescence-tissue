@@ -56,7 +56,7 @@ if uploaded_file is not None:
     st.session_state['logger'].info('Image uploaded')
 
     # Analyzer
-    if st.sidebar.button("Start Analysis"):
+    if st.sidebar.button("Start Analysis", use_container_width=True):
         st.session_state['logger'].info('Start Analysis')
         uploaded_file = None
         st.session_state['is_analyzed'] = False
@@ -67,6 +67,8 @@ if uploaded_file is not None:
 
         # Analyze image
         result_image, df_result = analyzing(state)
+        df_result.sort_values(by=['xmin','ymin'], inplace=True, ascending = [True, False])
+        df_result.reset_index(drop=True, inplace=True)
         st.session_state['result_image'] = result_image
         st.session_state['df_result'] = df_result
 
@@ -114,14 +116,14 @@ with coldes:
     size should not exceed 10 MB.</br>
     When you upload already, click the **Start Analysis** button in the left panel.
     """, unsafe_allow_html=True)
-    with st.expander("ℹ️ More Information about DAPI image"):
+    with st.expander("ℹ️ More Information about DAPI image", expanded=False):
         st.info("""
         We recommended to upload a DAPI image with resolution should be between 300x240 
         pixels to 400x340 pixels. The image should have a nucleus size similar to the example image 
         displayed in the right pane. However, images uploaded without meeting 
-        these size recommendations will be cropped to a size of 319x255 pixels.
+        these size recommendations will be cropped to a size of 320x256 pixels.
         The result image will be combined to same resolution as the uploaded image.
-        """)
+        """, icon="ℹ")
     st.markdown("""
     **Step 2: Check the Results** </br>
     On the results page, you will see an image with the identified nuclei highlighted, as well as a 

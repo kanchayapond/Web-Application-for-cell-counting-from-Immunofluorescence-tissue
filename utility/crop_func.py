@@ -34,8 +34,21 @@ def croping(img, r_width, r_height):
     st.session_state['logger'].info('Start deconstructing image...')
 
     # Crop image
-    i_width, i_height = 319, 255
-    n_width, n_height = [(r_width//i_width) + 1, (r_height//i_height) + 1]
+    st.session_state['crop_size'] = [320, 256]
+    i_width, i_height = st.session_state['crop_size']
+    if r_width % i_width != 0:
+        if r_height % i_height != 0:
+            n_width, n_height = [(r_width//i_width) + 1, (r_height//i_height) + 1]
+        elif r_height % i_height == 0:
+            n_width, n_height = [(r_width//i_width) + 1, r_height//i_height]
+    elif r_width % i_width == 0:
+        if r_height % i_height != 0:
+            n_width, n_height = [r_width//i_width, (r_height//i_height) + 1]
+        elif r_height % i_height == 0:
+            n_width, n_height = [r_width//i_width, r_height//i_height]
+    else:
+        st.session_state['logger'].error('Error when deconstructing image... Set it to default')
+        n_width, n_height = [(r_width//i_width) + 1, (r_height//i_height) + 1]
     # If use batch array
     #batch = np.zeros((n_width * n_height, i_height, i_width, 3), dtype=np.uint8)
     st.session_state['batch_size'] = [n_width, n_height]
@@ -65,7 +78,7 @@ def reconstruct(img_list):
     st.session_state['logger'].info('Batch size: {}'.format(st.session_state['batch_size']))
     # Get image size
     width, height = st.session_state['image_size']
-    i_width, i_height = 319, 255
+    i_width, i_height = st.session_state['crop_size']
     n_width, n_height = st.session_state['batch_size']
     # Reconstruct image
     img = np.zeros((height, width, 3), dtype=np.uint8)

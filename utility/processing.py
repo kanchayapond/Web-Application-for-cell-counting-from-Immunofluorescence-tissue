@@ -52,10 +52,10 @@ def analyzing(state):
                 st.session_state['logger'].info('YOLOv5 finished')
                 
                 # Fixing dataframe
-                df_result['xmin'] = df_result['xmin'] + i * st.session_state['batch_size'][0]
-                df_result['ymin'] = df_result['ymin'] + j * st.session_state['batch_size'][1]
-                df_result['xmax'] = df_result['xmax'] + i * st.session_state['batch_size'][0]
-                df_result['ymax'] = df_result['ymax'] + j * st.session_state['batch_size'][1]
+                df_result['xmin'] = df_result['xmin'] + j * st.session_state['crop_size'][0]
+                df_result['ymin'] = df_result['ymin'] + i * st.session_state['crop_size'][1]
+                df_result['xmax'] = df_result['xmax'] + j * st.session_state['crop_size'][0]
+                df_result['ymax'] = df_result['ymax'] + i * st.session_state['crop_size'][1]
 
                 # Appending
                 imagee_list.append(imagee)
@@ -82,7 +82,7 @@ def analyzing(state):
     st.session_state['logger'].info('Deleting all file in temp/')
 
     # Delete runs/detect
-    os.system('rm -rf runs/detect')
-    st.session_state['logger'].info('Deleting runs/detect')
+    os.system('rm -rf runs')
+    st.session_state['logger'].info('Deleting runs')
 
     return imagee, df_result

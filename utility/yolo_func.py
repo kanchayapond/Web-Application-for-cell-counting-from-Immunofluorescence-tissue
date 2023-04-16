@@ -164,10 +164,10 @@ def run(
     pascal_voc = pd.DataFrame(columns=column_name)
     for i in range(len(df)):
         pascal_voc.loc[i,'class'] = 'nucleus'
-        pascal_voc.loc[i,'xmin']  = int((df.loc[i,'x'] - df.loc[i,'w']/2)*319)
-        pascal_voc.loc[i,'ymin']  = int((df.loc[i,'y'] - df.loc[i,'h']/2)*255)
-        pascal_voc.loc[i,'xmax']  = int((df.loc[i,'x'] + df.loc[i,'w']/2)*319)
-        pascal_voc.loc[i,'ymax']  = int((df.loc[i,'y'] + df.loc[i,'h']/2)*255)
+        pascal_voc.loc[i,'xmin']  = int((df.loc[i,'x'] - df.loc[i,'w']/2)*320)
+        pascal_voc.loc[i,'ymin']  = int((df.loc[i,'y'] - df.loc[i,'h']/2)*256)
+        pascal_voc.loc[i,'xmax']  = int((df.loc[i,'x'] + df.loc[i,'w']/2)*320)
+        pascal_voc.loc[i,'ymax']  = int((df.loc[i,'y'] + df.loc[i,'h']/2)*256)
 
     # Cast dtypes
     pascal_voc = pascal_voc.astype({

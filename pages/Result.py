@@ -2,7 +2,7 @@ import streamlit as st
 from io import BytesIO
 from streamlit_cropper import st_cropper
 from streamlit.components.v1 import html
-import plotly.express as px
+import plotly.graph_objs as go
 
 from utility.logger import setup_logging
 if 'logger' not in st.session_state:
@@ -58,52 +58,119 @@ else:
         image = st.session_state['image']
         #st.sidebar.header("Your Uploaded Image")
         #st.sidebar.image(image)
-        option = st.sidebar.selectbox('Result Option',('Large Image', 'Zoomable Image'))
 
 if image is not None:
     result_image = st.session_state['result_image']
     df_result = st.session_state['df_result']
     #st.markdown('## Result')
     #st.markdown('---')
+    numbercell = len(df_result.index)
+    st.sidebar.markdown(""" #### Number of Nucleus is <span style="background-color: #A4A4A4; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell)), unsafe_allow_html=True)
+    
+    buf = BytesIO()
+    result_image.save(buf, format="png")
+    byte_im = buf.getvalue()
+    btn = st.sidebar.download_button(
+        label="Save image",
+        data=byte_im,
+        file_name='{}.png'.format(st.session_state['image_name'][:-4]),
+        mime="image/png",
+        use_container_width=True
+    )
+    
+    #option = st.sidebar.selectbox('Result Option',('Large Image', 'Zoomable Image'))
+    csv = convert_df(df_result)
+    st.sidebar.write(df_result.iloc[:,1:], use_column_width='always')
+    st.sidebar.download_button(
+        label="Save table",
+        data=csv,
+        file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
+        mime='text/csv',
+        use_container_width=True
+    )
 
-    colrsult,spacer = st.columns([6,8])
-    with colrsult:
-        numbercell = len(df_result.index)
-        st.markdown(""" ##### Number of Nucleus is <span style="background-color: #A4A4A4; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell)), unsafe_allow_html=True)    
-        csv = convert_df(df_result)
+    #if option == 'Large Image':
+    #    st.image(result_image, caption='Your result Image', use_column_width='always')
 
-    if option == 'Large Image':
-        st.image(result_image, caption='Your result Image',use_column_width= 'always')
+    #if option == 'Zoomable Image':
+    if True:
+        # Create figure
+        fig = go.Figure()
 
-    if option == 'Zoomable Image':
-        fig = px.imshow(result_image,aspect='equal', binary_backend="jpg")  
-        st.plotly_chart(fig)
-        crop_container = st.sidebar.container().empty()
-        with crop_container:
-            cropped_image = st_cropper(result_image, realtime_update=True, box_color='#EADDCA')
-        #cropped_img = st_cropper(result_image, realtime_update=True, box_color='#EADDCA')
-        st.image(cropped_image, use_column_width='always')
+        # Constants
+        img_width = 1000
+        img_height = 1000
+        scale_factor = 0.85
 
-    spacer,coltable,spacer = st.columns([1,12,1])
-    with coltable:
-        st.write(df_result)
-    spacer,col7,col6,spacer = st.columns([4,5,5,4])
-    with col7:
-        st.download_button(
-            label="Save table",
-            data=csv,
-            file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
-            mime='text/csv',
-        )
-    with col6:
-        buf = BytesIO()
-        result_image.save(buf, format="png")
-        byte_im = buf.getvalue()
-        btn = st.download_button(
-            label="Save image",
-            data=byte_im,
-            file_name='{}.png'.format(st.session_state['image_name'][:-4]),
-            mime="image/png"
+        # Add invisible scatter trace.
+        # This trace is added to help the autoresize logic work.
+        fig.add_trace(
+            go.Scatter(
+                x=[0, img_width * scale_factor],
+                y=[0, img_height * scale_factor],
+                mode="markers",
+                marker_opacity=0
             )
+        )
+
+        # Configure axes
+        fig.update_xaxes(
+            visible=False,
+            range=[0, img_width * scale_factor]
+        )
+
+        fig.update_yaxes(
+            visible=False,
+            range=[0, img_height * scale_factor],
+            # the scaleanchor attribute ensures that the aspect ratio stays constant
+            scaleanchor="x"
+        )
+
+        # Add image
+        fig.add_layout_image(
+            dict(
+                x=0,
+                sizex=img_width * scale_factor,
+                y=img_height * scale_factor,
+                sizey=img_height * scale_factor,
+                xref="x",
+                yref="y",
+                opacity=1.0,
+                layer="below",
+                source=result_image)
+        )
+
+        # Configure other layout
+        fig.update_layout(
+            width=img_width * scale_factor,
+            height=img_height * scale_factor,
+            margin={"l": 0, "r": 0, "t": 0, "b": 0},
+        )
+        st.plotly_chart(fig, use_container_width=True)
+        #cropped_img = st_cropper(result_image, realtime_update=True, box_color='#EADDCA')
+        #st.image(cropped_image, use_column_width='always')
+    
+    #spacer,coltable,spacer = st.columns([1,12,1])
+    #with coltable:
+    #    st.write(df_result)
+
+    #col7,col6 = st.columns([2,2])
+    #with col7:
+    #    st.sidebar.download_button(
+    #        label="Save table",
+    #        data=csv,
+    #        file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
+    #        mime='text/csv',
+    #    )
+    #with col6:
+    #    buf = BytesIO()
+    #    result_image.save(buf, format="png")
+    #    byte_im = buf.getvalue()
+    #    btn = st.sidebar.download_button(
+    #        label="Save image",
+    #        data=byte_im,
+    #        file_name='{}.png'.format(st.session_state['image_name'][:-4]),
+    #        mime="image/png"
+    #        )
 else:
     st.warning('You didn\'t upload image. Please upload image first at the Home page.', icon="⚠️")

@@ -5,13 +5,12 @@ __pycache__/
 
 # C extensions
 *.so
-Automatic-cell-counting-in-immunofluorescence-tissue/**
 
 
 # Distribution / packaging
 .Python
-temp/**
-build/
+apps/temp/**
+apps/build/
 develop-eggs/
 dist/
 downloads/

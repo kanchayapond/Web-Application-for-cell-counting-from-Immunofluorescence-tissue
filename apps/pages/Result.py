@@ -1,6 +1,5 @@
 import streamlit as st
 from io import BytesIO
-from streamlit_cropper import st_cropper
 from streamlit.components.v1 import html
 import plotly.graph_objs as go
 

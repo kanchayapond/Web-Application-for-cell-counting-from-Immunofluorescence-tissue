@@ -1,12 +1,8 @@
 import streamlit as st
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
 import timeit
 from PIL import Image
-from io import BytesIO
-from streamlit_cropper import st_cropper
-from streamlit.components.v1 import html
 
 from utility.yolo_func import run
 from utility.crop_func import reconstruct

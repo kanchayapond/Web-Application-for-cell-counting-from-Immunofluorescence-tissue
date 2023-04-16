@@ -2,7 +2,6 @@ import streamlit as st
 from streamlit.components.v1 import html
 from PIL import Image
 import base64
-import streamlit.components.v1 as components
 
 from utility.crop_func import check_resolution
 from utility.processing import analyzing

@@ -1,6 +1,5 @@
 import streamlit as st
 from io import BytesIO
-from skimage import io
 from PIL import Image
 from streamlit.components.v1 import html
 import plotly.graph_objs as go
@@ -40,7 +39,13 @@ def process_image(image):
     # Do something with the cropped image
     st.image(image, use_column_width='always')
 
-st.set_page_config(page_title="Result", page_icon="⬇️",layout="wide")
+st.set_page_config(
+    page_title="Result", 
+    page_icon="⬇️",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
+
 st.markdown(""" 
     <style> 
         div.stDownloadButton > button:first-child {
@@ -77,13 +82,21 @@ else:
 if image is not None:
     result_image = st.session_state['result_image']
     df_result = st.session_state['df_result']
-    #st.markdown('## Result')
-    #st.markdown('---')
 
-    #option = st.sidebar.selectbox('Result Option',('Large Image', 'Zoomable Image'))
     csv = convert_df(df_result)
     st.sidebar.markdown('## Result Table', unsafe_allow_html=True)
-    st.sidebar.write(df_result.iloc[:,1:], use_column_width='always')
+    # Define custom CSS to expand the table to the width of the sidebar
+    st.markdown(
+        f"""
+        <style>
+            .sidebar .css-1e0n0sd {{
+                width: 100%;
+            }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    st.sidebar.write(df_result.loc[:,['x (px)','y (px)','Intensity (mean)']], use_container_width=True)
     st.sidebar.download_button(
         label="Save table",
         data=csv,

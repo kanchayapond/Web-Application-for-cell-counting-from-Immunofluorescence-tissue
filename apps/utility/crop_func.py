@@ -3,7 +3,6 @@ from PIL import Image
 import numpy as np
 import timeit
 import os
-import skimage.io as io
 
 from utility.logger import setup_logging, check_pwd, tree
 if 'logger' not in st.session_state:

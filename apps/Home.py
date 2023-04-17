@@ -1,7 +1,5 @@
 import streamlit as st
 from streamlit.components.v1 import html
-import skimage.io as io
-import numpy as np
 from PIL import Image
 import base64
 # get full working path
@@ -49,7 +47,9 @@ def nav_page(page_name, timeout_secs=3):
 
 st.set_page_config(
     page_title="Home",
-    page_icon="👋", layout="wide"
+    page_icon="👋", 
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
 
 st.markdown(""" 
@@ -88,9 +88,6 @@ if uploaded_file is not None:
 
         # Analyze image
         result_image, df_result = analyzing(state)
-        df_result.sort_values(by=['xmin','ymin'], inplace=True, ascending = [True, False])
-        df_result.reset_index(drop=True, inplace=True)
-        df_result.index = np.arange(1, len(df_result) + 1)
         st.session_state['result_image'] = result_image
         st.session_state['df_result'] = df_result
 
@@ -123,7 +120,8 @@ nuclei, and a table containing additional metrics.
 """, unsafe_allow_html=True)
 
 st.markdown("""
-Details of our work are provided in the following paper: ________________ 
+Details of our work are provided in the following paper: 
+[Web Application for Automatic Nucleus Counting Immunofluorescence Tissue Biopsies](https://github.com/kanchayapond/Web-Application-for-cell-counting-from-Immunofluorescence-tissue) 
 We hope that researchers will use Imgpress to reduce errors and increase accuracy.
 """, unsafe_allow_html=True)
 
@@ -153,6 +151,16 @@ with coldes:
     *Additional:* to save the table and image result by clicking the **Save table** and **Save image** 
     buttons. Table will be saved as `.csv` file and image will be saved as `.png` file.
     """, unsafe_allow_html=True)
+    st.info("""
+        The table will contain the following columns:
+        - ***xmin***: x-coordinate of the top-left corner of the nucleus
+        - ***ymin***: y-coordinate of the top-left corner of the nucleus
+        - ***xmax***: x-coordinate of the bottom-right corner of the nucleus
+        - ***ymax***: y-coordinate of the bottom-right corner of the nucleus
+        - ***x (px)***: x-coordinate of the nucleus center
+        - ***y (px)***: y-coordinate of the nucleus center
+        - ***Intensity (mean)***: mean intensity of the nucleus
+        """, icon="ℹ")
 
 with colimg:
     Result = Image.open('img/sample.png')

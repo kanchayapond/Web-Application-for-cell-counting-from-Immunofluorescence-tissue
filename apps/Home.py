@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit.components.v1 import html
 import skimage.io as io
+import numpy as np
 from PIL import Image
 import base64
 # get full working path
@@ -51,6 +52,15 @@ st.set_page_config(
     page_icon="👋", layout="wide"
 )
 
+st.markdown(""" 
+    <style> 
+        div.stDownloadButton > button:first-child {
+            color: rgb(0 , 0 , 0);
+            background-color: rgb(219 , 223 , 232); 
+            width: 100%;
+        } 
+    </style>""", unsafe_allow_html=True)
+
 # Uploader
 st.sidebar.header('Upload Your Image')
 uploaded_file = st.sidebar.file_uploader("Choose a file", type=['png','jpg','tif'])
@@ -80,12 +90,12 @@ if uploaded_file is not None:
         result_image, df_result = analyzing(state)
         df_result.sort_values(by=['xmin','ymin'], inplace=True, ascending = [True, False])
         df_result.reset_index(drop=True, inplace=True)
+        df_result.index = np.arange(1, len(df_result) + 1)
         st.session_state['result_image'] = result_image
         st.session_state['df_result'] = df_result
 
         nav_page("Result")
 
-st.markdown(""" <style> div.stButton > button:first-child { background-color: rgb(255 , 255 , 255);width: 100% } </style>""", unsafe_allow_html=True)
 file_ = open("img/ezgif-2-d384fada9f.gif", "rb")
 contents = file_.read()
 data_url = base64.b64encode(contents).decode("utf-8")

@@ -17,9 +17,12 @@ def analyzing(state):
         # Status update
         st.session_state['logger'].info('Start running YOLOv5...')
         # Run YOLOv5
-        image_src = 'temp/{}.jpg'.format(st.session_state['image_name'][:-4])
+        #image_src = os.path.join(os.path.abspath("temp"), '{}.jpg'.format('temp'))
+        image_src = 'temp/{}.jpg'.format('temp')
+        #weight_path = os.path.join(os.path.abspath("weights"), 'best.pt')
         img, df_result = run(source=image_src, weights='weights/best.pt')
-        imagee = Image.fromarray(img[:,:,::-1])
+        #imagee = img.copy()   # Use skimage
+        imagee = Image.fromarray(img[:,:,::-1])    # Use PIL
         st.session_state['logger'].info('YOLOv5 finished')
 
     # If batch image
@@ -42,9 +45,12 @@ def analyzing(state):
                 st.session_state['logger'].info('Start running YOLOv5...')
 
                 # Run YOLOv5
-                image_src = 'temp/{}_{}_{}.jpg'.format(st.session_state['image_name'][:-4], i, j)
+                #image_src = os.path.join(os.path.abspath("temp"), '{}_{}_{}.jpg'.format('temp', i, j))
+                image_src = 'temp/{}_{}_{}.jpg'.format('temp', i, j)
+                #weight_path = os.path.join(os.path.abspath("weights"), 'best.pt')
                 img, df_result = run(source=image_src, weights='weights/best.pt')
-                imagee = Image.fromarray(img[:,:,::-1])
+                #imagee = img.copy()   # Use skimage
+                imagee = Image.fromarray(img[:,:,::-1])   # Use PIL
                 st.session_state['logger'].info('YOLOv5 finished')
                 
                 # Fixing dataframe

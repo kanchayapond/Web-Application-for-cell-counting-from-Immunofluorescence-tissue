@@ -1,5 +1,7 @@
 import streamlit as st
 from io import BytesIO
+from skimage import io
+from PIL import Image
 from streamlit.components.v1 import html
 import plotly.graph_objs as go
 
@@ -65,8 +67,10 @@ if image is not None:
     #st.markdown('---')
     numbercell = len(df_result.index)
     st.sidebar.markdown(""" #### Number of Nucleus is <span style="background-color: #A4A4A4; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell)), unsafe_allow_html=True)
-    
+
+    # Use PIL
     buf = BytesIO()
+    #result_image = Image.fromarray(result_image[:,:,::-1])
     result_image.save(buf, format="png")
     byte_im = buf.getvalue()
     btn = st.sidebar.download_button(

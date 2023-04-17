@@ -1,7 +1,12 @@
 import streamlit as st
 from streamlit.components.v1 import html
+import skimage.io as io
 from PIL import Image
 import base64
+# get full working path
+import os
+import sys
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from utility.crop_func import check_resolution
 from utility.processing import analyzing
@@ -9,6 +14,12 @@ from utility.logger import setup_logging
 if 'logger' not in st.session_state:
     st.session_state['logger'] = setup_logging()
     st.session_state['logger'].info('Home page loaded')
+
+if not os.path.exists('temp'):
+    os.makedirs('temp')
+    st.session_state['logger'].info('Create temp/ folder')
+else:
+    st.session_state['logger'].info('temp/ folder already exists')
 
 def nav_page(page_name, timeout_secs=3):
     nav_script = """
@@ -50,7 +61,8 @@ if uploaded_file is not None:
     st.session_state['logger'].info('Image uploading...')
 
     # Show image
-    image = Image.open(uploaded_file)
+    #image = io.imread(uploaded_file)   # Use skimage
+    image = Image.open(uploaded_file)   # Use PIL
     st.sidebar.image(image)
     st.session_state['logger'].info('Image uploaded')
 

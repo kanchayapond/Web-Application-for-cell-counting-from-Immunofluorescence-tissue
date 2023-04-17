@@ -2,8 +2,10 @@ import streamlit as st
 from PIL import Image
 import numpy as np
 import timeit
+import os
+import skimage.io as io
 
-from utility.logger import setup_logging
+from utility.logger import setup_logging, check_pwd, tree
 if 'logger' not in st.session_state:
     st.session_state['logger'] = setup_logging()
     st.session_state['logger'].info('Utility loaded')
@@ -12,7 +14,12 @@ if 'logger' not in st.session_state:
 # If resolution is correct, save image to temp folder pepare to analyze
 # If resolution is not correct, crop and save batch image to temp folder for prepare to analyze
 def check_resolution(img):
-    width, height = img.size
+    # Debugging
+    st.session_state['logger'].info('Current working directory: {}'.format(check_pwd()))
+    st.session_state['logger'].info('Current directory tree: /n{}'.format(tree('.')))
+
+    width, height = img.size    # Use PIL
+    #width, height = img.shape[1], img.shape[0]    # Use skimage
     width, height = int(width), int(height)
     st.session_state['image_size'] = [width, height]
     if 300 < width < 400:
@@ -21,7 +28,9 @@ def check_resolution(img):
             st.session_state['is_batch'] = False
             st.session_state['logger'].info("st.session_state['is_batch'] = {}".format(st.session_state['is_batch']))
             # Save image
-            img.save('temp/{}.jpg'.format(st.session_state['image_name'][:-4]))
+            file_path = os.path.join('temp', '{}.jpg'.format('temp'))
+            #io.imsave(file_path, img) # Use skimage
+            img.save(file_path) # Use PIL
             return st.session_state['is_batch']
     else:
         st.session_state['is_batch'] = True
@@ -63,11 +72,14 @@ def croping(img, r_width, r_height):
                 x = r_width - i_width
             if y + i_height > r_height:
                 y = r_height - i_height
-            crop = img.crop((x, y, x + i_width, y + i_height))
+            #crop = img[y:y + i_height, x:x + i_width] # Use skimage
+            crop = img.crop((x, y, x + i_width, y + i_height))  # Use PIL
             # Append to batch
             #batch[i * n_height + j] = np.array(crop)
             # Save batch image
-            Image.fromarray(np.array(crop)).save('temp/{}_{}_{}.jpg'.format(st.session_state['image_name'][:-4], i, j))
+            file_path = os.path.join('temp', '{}_{}_{}.jpg'.format('temp', i, j))
+            #io.imsave(file_path, np.array(crop)) # Use skimage
+            Image.fromarray(np.array(crop)).save(file_path)     # Use PIL
     end_time = timeit.default_timer()
     st.session_state['logger'].info('Deconstructing image done in {} seconds'.format(end_time - start_time))
 
@@ -93,5 +105,6 @@ def reconstruct(img_list):
             img[y:y + i_height, x:x + i_width] = img_list[i * n_height + j]
     end_time = timeit.default_timer()
     st.session_state['logger'].info('Reconstructing image done in {} seconds'.format(end_time - start_time))
-    img = Image.fromarray(img)
+    img = Image.fromarray(img)  # Use PIL
+    #img = img.astype(np.uint8)  # Use skimage
     return img

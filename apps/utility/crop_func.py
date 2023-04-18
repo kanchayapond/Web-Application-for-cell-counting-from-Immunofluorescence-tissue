@@ -13,10 +13,6 @@ if 'logger' not in st.session_state:
 # If resolution is correct, save image to temp folder pepare to analyze
 # If resolution is not correct, crop and save batch image to temp folder for prepare to analyze
 def check_resolution(img):
-    # Debugging
-    st.session_state['logger'].info('Current working directory: {}'.format(check_pwd()))
-    st.session_state['logger'].info('Current directory tree: /n{}'.format(tree('.')))
-
     width, height = img.size    # Use PIL
     #width, height = img.shape[1], img.shape[0]    # Use skimage
     width, height = int(width), int(height)

@@ -1,11 +1,10 @@
 {
     "hosting": {
-        "public": "apps",
         "rewrites": [{
             "source": "**",
             "run": {
-            "serviceId": "imgpress",
-            "region": "asia-southeast1"
+                "serviceId": "imgpress-prod",
+                "region": "asia-southeast1"
             }
         }]
     }

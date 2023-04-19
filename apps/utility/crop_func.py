@@ -27,6 +27,11 @@ def check_resolution(img):
             #io.imsave(file_path, img) # Use skimage
             img.save(file_path) # Use PIL
             return st.session_state['is_batch']
+    elif width < 300 or height < 240:
+        # Image is to small
+        error = st.empty()
+        error.error("The uploaded DAPI image is too small for processing, please upload a new image with a higher resolution.", icon="⚠️")
+        st.stop()
     else:
         st.session_state['is_batch'] = True
         croping(img, width, height)

@@ -96,7 +96,7 @@ if image is not None:
         """,
         unsafe_allow_html=True
     )
-    st.sidebar.write(df_result.loc[:,['x (px)','y (px)','Intensity (mean)']], use_container_width=True)
+    st.sidebar.write(df_result.loc[:,['x (px)','y (px)','Mean Intensity']], use_container_width=True)
     st.sidebar.download_button(
         label="Save table",
         data=csv,

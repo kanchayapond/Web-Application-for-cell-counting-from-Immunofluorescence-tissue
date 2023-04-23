@@ -159,12 +159,17 @@ with coldes:
         - ***ymax***: y-coordinate of the bottom-right corner of the nucleus
         - ***x (px)***: x-coordinate of the nucleus center
         - ***y (px)***: y-coordinate of the nucleus center
-        - ***Intensity (mean)***: mean intensity of the nucleus
+        - ***Mean Intensity***: mean intensity of the nucleus
+        - ***Horizontal radius (px)***: horizontal radius of the nucleus
+        - ***Vertical radius (px)***: vertical radius of the nucleus
+        - ***Area (px^2)***: area of the nucleus
         """, icon="ℹ")
 
 with colimg:
     Result = Image.open('img/sample.png')
-    st.image(Result, use_column_width= 'always', caption='Example of DAPI image')
+    st.image(Result, use_column_width= 'always', caption='Recomended example of DAPI image')
+    Not_rec = Image.open('img/not_rec.png')
+    st.image(Not_rec, use_column_width= 'always', caption='Not recomended example of DAPI image')
 
 st.markdown("---", unsafe_allow_html=True)
 

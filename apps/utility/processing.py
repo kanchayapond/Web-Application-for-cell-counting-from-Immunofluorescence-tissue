@@ -5,6 +5,7 @@ import numpy as np
 import timeit
 from PIL import Image, ImageDraw, ImageStat
 from skimage.filters import threshold_otsu
+from skimage.draw import ellipse
 
 from utility.yolo_func import run
 from utility.crop_func import reconstruct
@@ -49,6 +50,39 @@ def draw_no(pil_image, df):
         draw.text((text_x, text_y), text, fill=(255, 255, 255))
 
     return pil_image
+
+# Create ellipse on bounding box
+def draw_ellipse(pil_image, df):
+    # Convert PIL to numpy
+    pil_image = np.array(pil_image)
+
+    # Create empty list
+    h_r = []
+    v_r = []
+    area = []
+    for index, row in df.iterrows():
+        # Get the bounding box coordinates
+        xmin, ymin, xmax, ymax = row['xmin'], row['ymin'], row['xmax'], row['ymax']
+
+        # Determine center and radius values
+        center_x = (xmax + xmin) / 2
+        center_y = (ymax + ymin) / 2
+        horizontal_radius = (xmax - xmin) / 2
+        vertical_radius = (ymax - ymin) / 2
+        h_r.append(horizontal_radius)
+        v_r.append(vertical_radius)
+
+        # Draw the ellipse on the image
+        rr, cc = ellipse(center_y, center_x, vertical_radius, horizontal_radius)
+        pil_image[rr, cc] = 255
+
+        # Calculate area
+        area.append(np.pi * horizontal_radius * vertical_radius)
+    
+    # Convert numpy to PIL
+    pil_image = Image.fromarray(pil_image)
+
+    return pil_image, h_r, v_r, area
 
 def clean_up():
     # Clean up
@@ -144,7 +178,7 @@ def analyzing(state):
     st.session_state['logger'].info('Drawing number finished')
 
     # Calculate intensity
-    df_result['Intensity (mean)'] = df_result.apply(
+    df_result['Mean Intensity'] = df_result.apply(
         lambda x: find_intensity(
             imagee.crop(
                 (x['xmin'], x['ymin'], x['xmax'], x['ymax'])
@@ -152,7 +186,16 @@ def analyzing(state):
         ), axis=1)
     st.session_state['logger'].info('Intensity calculation finished')
 
+    # Calculate ellipse
+    image_add_ellipse, h_r, v_r, area = draw_ellipse(imagee, df_result)
+    df_result['Horizontal radius (px)'] = h_r
+    df_result['Vertical radius (px)'] = v_r
+    df_result['Area (px^2)'] = area
+
     # Clean temporary files
     clean_up()
 
     return imagee, df_result
+
+if __name__ == '__main__':
+    print('Start running main.py')

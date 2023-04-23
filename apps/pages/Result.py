@@ -35,10 +35,6 @@ def nav_page(page_name, timeout_secs=3):
     """ % (page_name, timeout_secs)
     html(nav_script)
 
-def process_image(image):
-    # Do something with the cropped image
-    st.image(image, use_column_width='always')
-
 st.set_page_config(
     page_title="Result", 
     page_icon="⬇️",
@@ -84,7 +80,6 @@ if image is not None:
     df_result = st.session_state['df_result']
 
     csv = convert_df(df_result)
-    st.sidebar.markdown('## Result Table', unsafe_allow_html=True)
     # Define custom CSS to expand the table to the width of the sidebar
     st.markdown(
         f"""
@@ -96,14 +91,12 @@ if image is not None:
         """,
         unsafe_allow_html=True
     )
-    st.sidebar.write(df_result.loc[:,['x (px)','y (px)','Mean Intensity']], use_container_width=True)
-    st.sidebar.download_button(
-        label="Save table",
-        data=csv,
-        file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
-        mime='text/csv',
-        use_container_width=True
-    )
+    st.sidebar.markdown('## Your uploaded image', unsafe_allow_html=True)
+    st.sidebar.image(image, use_column_width=True)
+    if st.sidebar.button('Upload another image', use_container_width=True):
+        st.session_state['is_analyzed'] = False
+        # Passthrough to upload button
+        nav_page('')
 
     numbercell = len(df_result.index)
     st.markdown(""" #### Number of Nucleus is <span style="background-color: #A4A4A4; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell)), unsafe_allow_html=True)
@@ -164,12 +157,25 @@ if image is not None:
         result_image.save(buf, format="png")
         byte_im = buf.getvalue()
         btn = st.download_button(
-            label="Save image",
+            label="🏞️ Save image",
             data=byte_im,
             file_name='{}.png'.format(st.session_state['image_name'][:-4]),
             mime="image/png",
             use_container_width=True
         )
 
+    st.markdown('---')
+    st.markdown('#### Result Table', unsafe_allow_html=True)
+    st.write(df_result, use_container_width='always', text_align='center')
+    spacer, dwn_btn_t, spacer = st.columns([4,6,4])
+    with dwn_btn_t:
+        st.download_button(
+        label="🗒️ Save table",
+        data=csv,
+        file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
+        mime='text/csv',
+        use_container_width=True
+    )
+        
 else:
     st.warning('You didn\'t upload image. Please upload image first at the Home page.', icon="⚠️")

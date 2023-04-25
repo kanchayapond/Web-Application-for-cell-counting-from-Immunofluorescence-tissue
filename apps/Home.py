@@ -1,6 +1,5 @@
 import streamlit as st
 from streamlit.components.v1 import html
-import skimage.io as io
 from PIL import Image
 import base64
 # get full working path
@@ -48,8 +47,19 @@ def nav_page(page_name, timeout_secs=3):
 
 st.set_page_config(
     page_title="Home",
-    page_icon="👋", layout="wide"
+    page_icon="👋", 
+    layout="wide",
+    initial_sidebar_state="expanded",
 )
+
+st.markdown(""" 
+    <style> 
+        div.stDownloadButton > button:first-child {
+            color: rgb(0 , 0 , 0);
+            background-color: rgb(219 , 223 , 232); 
+            width: 100%;
+        } 
+    </style>""", unsafe_allow_html=True)
 
 # Uploader
 st.sidebar.header('Upload Your Image')
@@ -78,14 +88,11 @@ if uploaded_file is not None:
 
         # Analyze image
         result_image, df_result = analyzing(state)
-        df_result.sort_values(by=['xmin','ymin'], inplace=True, ascending = [True, False])
-        df_result.reset_index(drop=True, inplace=True)
         st.session_state['result_image'] = result_image
         st.session_state['df_result'] = df_result
 
         nav_page("Result")
 
-st.markdown(""" <style> div.stButton > button:first-child { background-color: rgb(255 , 255 , 255);width: 100% } </style>""", unsafe_allow_html=True)
 file_ = open("img/ezgif-2-d384fada9f.gif", "rb")
 contents = file_.read()
 data_url = base64.b64encode(contents).decode("utf-8")
@@ -113,7 +120,8 @@ nuclei, and a table containing additional metrics.
 """, unsafe_allow_html=True)
 
 st.markdown("""
-Details of our work are provided in the following paper: ________________ 
+Details of our work are provided in the following paper: 
+[Web Application for Automatic Nucleus Counting Immunofluorescence Tissue Biopsies](https://github.com/kanchayapond/Web-Application-for-cell-counting-from-Immunofluorescence-tissue) 
 We hope that researchers will use Imgpress to reduce errors and increase accuracy.
 """, unsafe_allow_html=True)
 
@@ -143,10 +151,25 @@ with coldes:
     *Additional:* to save the table and image result by clicking the **Save table** and **Save image** 
     buttons. Table will be saved as `.csv` file and image will be saved as `.png` file.
     """, unsafe_allow_html=True)
+    st.info("""
+        The table will contain the following columns:
+        - ***xmin***: x-coordinate of the top-left corner of the nucleus
+        - ***ymin***: y-coordinate of the top-left corner of the nucleus
+        - ***xmax***: x-coordinate of the bottom-right corner of the nucleus
+        - ***ymax***: y-coordinate of the bottom-right corner of the nucleus
+        - ***x (px)***: x-coordinate of the nucleus center
+        - ***y (px)***: y-coordinate of the nucleus center
+        - ***Mean Intensity***: mean intensity of the nucleus
+        - ***Horizontal radius (px)***: horizontal radius of the nucleus
+        - ***Vertical radius (px)***: vertical radius of the nucleus
+        - ***Area (px^2)***: area of the nucleus
+        """, icon="ℹ")
 
 with colimg:
     Result = Image.open('img/sample.png')
-    st.image(Result, use_column_width= 'always', caption='Example of DAPI image')
+    st.image(Result, use_column_width= 'always', caption='Recomended example of DAPI image')
+    Not_rec = Image.open('img/not_rec.png')
+    st.image(Not_rec, use_column_width= 'always', caption='Not recomended example of DAPI image')
 
 st.markdown("---", unsafe_allow_html=True)
 

@@ -3,7 +3,6 @@ from PIL import Image
 import numpy as np
 import timeit
 import os
-import skimage.io as io
 
 from utility.logger import setup_logging, check_pwd, tree
 if 'logger' not in st.session_state:
@@ -14,10 +13,6 @@ if 'logger' not in st.session_state:
 # If resolution is correct, save image to temp folder pepare to analyze
 # If resolution is not correct, crop and save batch image to temp folder for prepare to analyze
 def check_resolution(img):
-    # Debugging
-    st.session_state['logger'].info('Current working directory: {}'.format(check_pwd()))
-    st.session_state['logger'].info('Current directory tree: /n{}'.format(tree('.')))
-
     width, height = img.size    # Use PIL
     #width, height = img.shape[1], img.shape[0]    # Use skimage
     width, height = int(width), int(height)
@@ -32,6 +27,11 @@ def check_resolution(img):
             #io.imsave(file_path, img) # Use skimage
             img.save(file_path) # Use PIL
             return st.session_state['is_batch']
+    elif width < 300 or height < 240:
+        # Image is to small
+        error = st.empty()
+        error.error("The uploaded DAPI image is too small for processing, please upload a new image with a higher resolution.", icon="⚠️")
+        st.stop()
     else:
         st.session_state['is_batch'] = True
         croping(img, width, height)

@@ -1,6 +1,5 @@
 import streamlit as st
 from io import BytesIO
-from skimage import io
 from PIL import Image
 from streamlit.components.v1 import html
 import plotly.graph_objs as go
@@ -36,12 +35,28 @@ def nav_page(page_name, timeout_secs=3):
     """ % (page_name, timeout_secs)
     html(nav_script)
 
-def process_image(image):
-    # Do something with the cropped image
-    st.image(image, use_column_width='always')
+st.set_page_config(
+    page_title="Result", 
+    page_icon="⬇️",
+    layout="wide",
+    initial_sidebar_state="expanded",
+)
 
-st.set_page_config(page_title="Result", page_icon="⬇️",layout="wide")
-st.markdown(""" <style> div.stButton > button:first-child { background-color: rgb(198 , 198 , 198);width: 100% } </style>""", unsafe_allow_html=True)
+st.markdown(""" 
+    <style> 
+        div.stDownloadButton > button:first-child {
+            color: rgb(0 , 0 , 0);
+            background-color: rgb(219 , 223 , 232); 
+            width: 100%;
+        } 
+    </style>""", unsafe_allow_html=True)
+st.markdown("""
+    <style>
+           .block-container {
+                padding-top: 1rem;
+            }
+    </style>
+    """, unsafe_allow_html=True)
 
 @st.cache_data
 def convert_df(df):
@@ -63,117 +78,104 @@ else:
 if image is not None:
     result_image = st.session_state['result_image']
     df_result = st.session_state['df_result']
-    #st.markdown('## Result')
-    #st.markdown('---')
-    numbercell = len(df_result.index)
-    st.sidebar.markdown(""" #### Number of Nucleus is <span style="background-color: #A4A4A4; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell)), unsafe_allow_html=True)
 
-    # Use PIL
-    buf = BytesIO()
-    #result_image = Image.fromarray(result_image[:,:,::-1])
-    result_image.save(buf, format="png")
-    byte_im = buf.getvalue()
-    btn = st.sidebar.download_button(
-        label="Save image",
-        data=byte_im,
-        file_name='{}.png'.format(st.session_state['image_name'][:-4]),
-        mime="image/png",
-        use_container_width=True
-    )
-    
-    #option = st.sidebar.selectbox('Result Option',('Large Image', 'Zoomable Image'))
     csv = convert_df(df_result)
-    st.sidebar.write(df_result.iloc[:,1:], use_column_width='always')
-    st.sidebar.download_button(
-        label="Save table",
+    # Define custom CSS to expand the table to the width of the sidebar
+    st.markdown(
+        f"""
+        <style>
+            .sidebar .css-1e0n0sd {{
+                width: 100%;
+            }}
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+    st.sidebar.markdown('## Your uploaded image', unsafe_allow_html=True)
+    st.sidebar.image(image, use_column_width=True)
+    if st.sidebar.button('Upload another image', use_container_width=True):
+        st.session_state['is_analyzed'] = False
+        # Passthrough to upload button
+        nav_page('')
+
+    numbercell = len(df_result.index)
+    st.markdown(""" #### Number of Nucleus is <span style="background-color: #A4A4A4; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell)), unsafe_allow_html=True)
+
+    # Create figure
+    fig = go.Figure()
+    # Constants
+    img_width = 1000
+    img_height = 800
+    scale_factor = 0.825
+    # Add invisible scatter trace.
+    # This trace is added to help the autoresize logic work.
+    fig.add_trace(
+        go.Scatter(
+            x=[0, img_width * scale_factor],
+            y=[0, img_height * scale_factor],
+            mode="markers",
+            marker_opacity=0
+        )
+    )
+    # Configure axes
+    fig.update_xaxes(
+        visible=False,
+        range=[0, img_width * scale_factor]
+    )
+    fig.update_yaxes(
+        visible=False,
+        range=[0, img_height * scale_factor],
+        # the scaleanchor attribute ensures that the aspect ratio stays constant
+        scaleanchor="x"
+    )
+    # Add image
+    fig.add_layout_image(
+        dict(
+            x=0,
+            sizex=img_width * scale_factor,
+            y=img_height * scale_factor,
+            sizey=img_height * scale_factor,
+            xref="x",
+            yref="y",
+            opacity=1.0,
+            layer="below",
+            source=result_image)
+    )
+    # Configure other layout
+    fig.update_layout(
+        width=img_width * scale_factor,
+        height=img_height * scale_factor,
+        margin={"l": 0, "r": 0, "t": 0, "b": 0},
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+    spacer, dwn_btn, spacer = st.columns([4,6,4])
+    with dwn_btn:
+        # Use PIL
+        buf = BytesIO()
+        #result_image = Image.fromarray(result_image[:,:,::-1])
+        result_image.save(buf, format="png")
+        byte_im = buf.getvalue()
+        btn = st.download_button(
+            label="🏞️ Save image",
+            data=byte_im,
+            file_name='{}.png'.format(st.session_state['image_name'][:-4]),
+            mime="image/png",
+            use_container_width=True
+        )
+
+    st.markdown('---')
+    st.markdown('#### Result Table', unsafe_allow_html=True)
+    st.write(df_result, use_container_width='always', text_align='center')
+    spacer, dwn_btn_t, spacer = st.columns([4,6,4])
+    with dwn_btn_t:
+        st.download_button(
+        label="🗒️ Save table",
         data=csv,
         file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
         mime='text/csv',
         use_container_width=True
     )
-
-    #if option == 'Large Image':
-    #    st.image(result_image, caption='Your result Image', use_column_width='always')
-
-    #if option == 'Zoomable Image':
-    if True:
-        # Create figure
-        fig = go.Figure()
-
-        # Constants
-        img_width = 1000
-        img_height = 1000
-        scale_factor = 0.85
-
-        # Add invisible scatter trace.
-        # This trace is added to help the autoresize logic work.
-        fig.add_trace(
-            go.Scatter(
-                x=[0, img_width * scale_factor],
-                y=[0, img_height * scale_factor],
-                mode="markers",
-                marker_opacity=0
-            )
-        )
-
-        # Configure axes
-        fig.update_xaxes(
-            visible=False,
-            range=[0, img_width * scale_factor]
-        )
-
-        fig.update_yaxes(
-            visible=False,
-            range=[0, img_height * scale_factor],
-            # the scaleanchor attribute ensures that the aspect ratio stays constant
-            scaleanchor="x"
-        )
-
-        # Add image
-        fig.add_layout_image(
-            dict(
-                x=0,
-                sizex=img_width * scale_factor,
-                y=img_height * scale_factor,
-                sizey=img_height * scale_factor,
-                xref="x",
-                yref="y",
-                opacity=1.0,
-                layer="below",
-                source=result_image)
-        )
-
-        # Configure other layout
-        fig.update_layout(
-            width=img_width * scale_factor,
-            height=img_height * scale_factor,
-            margin={"l": 0, "r": 0, "t": 0, "b": 0},
-        )
-        st.plotly_chart(fig, use_container_width=True)
-        #cropped_img = st_cropper(result_image, realtime_update=True, box_color='#EADDCA')
-        #st.image(cropped_image, use_column_width='always')
-    
-    #spacer,coltable,spacer = st.columns([1,12,1])
-    #with coltable:
-    #    st.write(df_result)
-
-    #col7,col6 = st.columns([2,2])
-    #with col7:
-    #    st.sidebar.download_button(
-    #        label="Save table",
-    #        data=csv,
-    #        file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
-    #        mime='text/csv',
-    #    )
-    #with col6:
-    #    buf = BytesIO()
-    #    result_image.save(buf, format="png")
-    #    byte_im = buf.getvalue()
-    #    btn = st.sidebar.download_button(
-    #        label="Save image",
-    #        data=byte_im,
-    #        file_name='{}.png'.format(st.session_state['image_name'][:-4]),
-    #        mime="image/png"
-    #        )
+        
 else:
     st.warning('You didn\'t upload image. Please upload image first at the Home page.', icon="⚠️")

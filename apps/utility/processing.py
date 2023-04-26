@@ -188,10 +188,18 @@ def analyzing(state):
 
     # Calculate ellipse
     image_add_ellipse, h_r, v_r, area = draw_ellipse(imagee, df_result)
-    df_result['Horizontal radius (px)'] = h_r
-    df_result['Vertical radius (px)'] = v_r
-    df_result['Area (px^2)'] = area
 
+    for i in range(len(df_result)):
+        if h_r[i] < v_r[i]:
+            temp = h_r[i]
+            h_r[i] = v_r[i]
+            v_r[i] = temp
+    df_result['Major radius (px)'] = h_r
+    df_result['Minor radius (px)'] = v_r
+    df_result['Area (px^2)'] = area
+    df_result= df_result.drop(columns=['class'])
+
+    df_result = df_result.astype({"Mean Intensity":"int","Major radius (px)":"int","Minor radius (px)":"int","Area (px^2)":"int"})
     # Clean temporary files
     clean_up()
 

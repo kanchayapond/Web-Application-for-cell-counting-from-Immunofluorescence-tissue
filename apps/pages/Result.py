@@ -79,7 +79,6 @@ if image is not None:
     result_image = st.session_state['result_image']
     df_result = st.session_state['df_result']
 
-    csv = convert_df(df_result)
     # Define custom CSS to expand the table to the width of the sidebar
     st.markdown(
         f"""
@@ -97,6 +96,7 @@ if image is not None:
         st.session_state['is_analyzed'] = False
         # Passthrough to upload button
         nav_page('')
+    st.sidebar.warning('Zoom in by dragging a rectangle around the area, zoom out by double-clicking.', icon="⚠️")
 
     numbercell = len(df_result.index)
     st.markdown(""" #### Number of Nucleus is <span style="background-color: #A4A4A4; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell)), unsafe_allow_html=True)
@@ -166,12 +166,98 @@ if image is not None:
 
     st.markdown('---')
     st.markdown('#### Result Table', unsafe_allow_html=True)
-    st.write(df_result, use_container_width='always', text_align='center')
+    csv = convert_df(df_result)
+
+    df_resultshow1=df_result.drop(columns=['xmin','ymin','xmax','ymax'])
+
+    # Read in your dataframe
+    df = df_resultshow1
+
+    # Set the number of rows to display per page
+    rows_per_page = 10
+
+    # Initialize the current page number
+    current_page = st.session_state.get("current_page", 1)
+
+    # Calculate the total number of pages
+    total_pages = int(len(df) / rows_per_page) + 1
+
+    # Create the navigation buttons and container
+    spacer, previous_button, dropdown_page, next_button, show_all_button, spacer = st.columns([4, 6, 6, 6, 6, 4])
+    with previous_button:
+        if st.button("Previous"):
+            if current_page > 1:
+                current_page -= 1
+                st.session_state["current_page"] = current_page
+
+    # Create numbered dropdown for choosing a page of the table
+    with dropdown_page:
+        # st.write("Go to page:")
+        page_selection = st.selectbox("Go to page:", list(range(1, total_pages + 1)), index=current_page - 1)
+        if page_selection != current_page:
+            current_page = page_selection
+            st.session_state["current_page"] = current_page
+
+    # Create the "Next" button
+    # with next_button:
+        # if st.button("Next"):
+        #     if current_page < total_pages:
+        #         current_page += 1
+        #         st.session_state["current_page"] = current_page
+    with next_button:
+        if st.button("Next") and current_page < total_pages:
+            current_page += 1
+            st.session_state["current_page"] = current_page
+        
+    with show_all_button:
+        if st.button("Show all rows"):
+            rows_per_page = len(df)
+            current_page = 1
+            st.session_state["current_page"] = current_page
+
+    # Calculate the starting and ending row numbers for the current page
+    start_row = (current_page - 1) * rows_per_page
+    if rows_per_page == len(df):
+        end_row = len(df)
+    else:
+        end_row = min(start_row + rows_per_page, len(df))
+
+    # Display the set of rows based on the starting and ending row numbers
+    if end_row > start_row:
+        st.write(df[start_row:end_row])
+    else:
+        st.write(df[start_row:])
+
+
+
+    # st.write(df_resultshow1, use_container_width='always', text_align='center')
     spacer, dwn_btn_t, spacer = st.columns([4,6,4])
     with dwn_btn_t:
         st.download_button(
-        label="🗒️ Save table",
+        label="🗒️ Save All columns table",
         data=csv,
+        file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
+        mime='text/csv',
+        use_container_width=True
+    )
+    st.markdown('---')
+
+    st.markdown('#### Choose columns for save Table', unsafe_allow_html=True)
+    columns = st.multiselect("Columns:",df_result.columns)
+    filter = st.radio("Choose by:", ("inclusion","exclusion"))
+
+    if filter == "exclusion":
+        columns = [col for col in df_result.columns if col not in columns]
+    df_result[columns]
+    df_resultselect=df_result[columns]
+    csv2 = convert_df(df_resultselect)
+
+
+    spacer, dwn_btn_t2, spacer = st.columns([4,6,4])
+    with dwn_btn_t2:
+        st.download_button(
+        label="🗒️ Save Selected table",
+        data=csv2,
         file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
         mime='text/csv',
         use_container_width=True

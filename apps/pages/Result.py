@@ -185,6 +185,8 @@ if image is not None:
     # Create the navigation buttons and container
     spacer, previous_button, dropdown_page, next_button, show_all_button, spacer = st.columns([4, 6, 6, 6, 6, 4])
     with previous_button:
+        st.write(" ")
+
         if st.button("Previous"):
             if current_page > 1:
                 current_page -= 1
@@ -193,7 +195,7 @@ if image is not None:
     # Create numbered dropdown for choosing a page of the table
     with dropdown_page:
         # st.write("Go to page:")
-        page_selection = st.selectbox("Go to page:", list(range(1, total_pages + 1)), index=current_page - 1)
+        page_selection = st.selectbox("", list(range(1, total_pages + 1)), index=current_page - 1)
         if page_selection != current_page:
             current_page = page_selection
             st.session_state["current_page"] = current_page

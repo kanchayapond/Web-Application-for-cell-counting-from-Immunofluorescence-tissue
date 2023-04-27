@@ -186,7 +186,7 @@ if image is not None:
     spacer, previous_button, dropdown_page, next_button, show_all_button, spacer = st.columns([4, 6, 6, 6, 6, 4])
     with previous_button:
         st.write(" ")
-
+        st.write(" ")
         if st.button("Previous"):
             if current_page > 1:
                 current_page -= 1

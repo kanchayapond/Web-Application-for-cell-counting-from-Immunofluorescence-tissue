@@ -10,6 +10,8 @@ if 'logger' not in st.session_state:
     st.session_state['logger'].info('Result page loaded')
 
 # import img
+
+
 def nav_page(page_name, timeout_secs=3):
     nav_script = """
         <script type="text/javascript">
@@ -183,7 +185,7 @@ if image is not None:
     total_pages = int(len(df) / rows_per_page) + 1
 
     # Create the navigation buttons and container
-    spacer, previous_button, dropdown_page, next_button, show_all_button, spacer = st.columns([4, 6, 6, 6, 6, 4])
+    spacer, previous_button, dropdown_page, next_button,  spacer = st.columns([4, 6, 6, 6,4])
     with previous_button:
         st.write(" ")
         st.write(" ")
@@ -207,15 +209,17 @@ if image is not None:
         #         current_page += 1
         #         st.session_state["current_page"] = current_page
     with next_button:
+        st.write(" ")
+        st.write(" ")
         if st.button("Next") and current_page < total_pages:
             current_page += 1
             st.session_state["current_page"] = current_page
         
-    with show_all_button:
-        if st.button("Show all rows"):
-            rows_per_page = len(df)
-            current_page = 1
-            st.session_state["current_page"] = current_page
+    # with show_all_button:
+    #     if st.button("Show all rows"):
+    #         rows_per_page = len(df)
+    #         current_page = 1
+    #         st.session_state["current_page"] = current_page
 
     # Calculate the starting and ending row numbers for the current page
     start_row = (current_page - 1) * rows_per_page
@@ -229,41 +233,72 @@ if image is not None:
         st.write(df[start_row:end_row])
     else:
         st.write(df[start_row:])
-
+     
 
 
     # st.write(df_resultshow1, use_container_width='always', text_align='center')
     spacer, dwn_btn_t, spacer = st.columns([4,6,4])
     with dwn_btn_t:
         st.download_button(
-        label="🗒️ Save All columns table",
+        label="🗒️ Save table",
         data=csv,
         file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
         mime='text/csv',
         use_container_width=True
     )
-    st.markdown('---')
 
-    st.markdown('#### Choose columns for save Table', unsafe_allow_html=True)
-    columns = st.multiselect("Columns:",df_result.columns)
-    filter = st.radio("Choose by:", ("inclusion","exclusion"))
+    # Load your data into a pandas DataFrame
+    data = df_resultshow1
 
-    if filter == "exclusion":
-        columns = [col for col in df_result.columns if col not in columns]
-    df_result[columns]
-    df_resultselect=df_result[columns]
-    csv2 = convert_df(df_resultselect)
+    # Define the number of rows to display per page
+    page_size = 25
 
 
-    spacer, dwn_btn_t2, spacer = st.columns([4,6,4])
-    with dwn_btn_t2:
-        st.download_button(
-        label="🗒️ Save Selected table",
-        data=csv2,
-        file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
-        mime='text/csv',
-        use_container_width=True
-    )
-        
+    # Calculate the total number of pages needed
+    num_pages = int(len(data) / page_size) + 1
+
+    # Define a page number variable to keep track of the current page
+    page_num = 1
+
+    # Define the starting and ending row indices for the current page
+    start_idx = (page_num - 1) * page_size
+    end_idx = start_idx + page_size
+
+    # Add buttons to move to the previous and next page
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+    if col1.button('Prev') and page_num > 1:
+        page_num -= 1
+
+    if col3.button('Nextt') and page_num < num_pages:
+        page_num += 1
+
+    start_idx = (page_num - 1) * page_size
+    end_idx = start_idx + page_size
+    # Add the page number slider between the "Prev" and "Next" buttons
+    with col2.container():
+        new_page_num = st.slider('Page Number', 1, num_pages, page_num)
+        if new_page_num != page_num:
+            page_num = new_page_num
+            start_idx = (page_num - 1) * page_size
+            end_idx = start_idx + page_size
+
+
+        # Display the DataFrame with pagination
+    col2.write(f"Showing rows {start_idx + 1} to {min(end_idx, len(data))} of {len(data)}")
+    st.write(data[start_idx:end_idx])
+
+
+
+    # columns = st.multiselect("Columns:",df_result.columns)
+    # filter = st.radio("Choose by:", ("inclusion","exclusion"))
+
+    # if filter == "exclusion":
+    #     columns = [col for col in df_result.columns if col not in columns]
+    # df_result[columns]
+    # df_resultselect=df_result[columns]
+    # csv2 = convert_df(df_resultselect)
+    
+
 else:
     st.warning('You didn\'t upload image. Please upload image first at the Home page.', icon="⚠️")

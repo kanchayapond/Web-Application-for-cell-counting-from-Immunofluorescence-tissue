@@ -105,7 +105,7 @@ with headimg:
     )
 with headtitl:
     st.markdown("# Imgpress", unsafe_allow_html=True)
-    st.markdown("##### A automatic nucleus counting tool for Immunofluorescence tissue (DAPI)", unsafe_allow_html=True)
+    st.markdown("##### Automated Quantification of DAPI-stained Nuclei in Immunofluorescence Tissue", unsafe_allow_html=True)
     st.markdown("create by [S. Kanchayapond](https://github.com/kanchayapond), [N. Nichapat](https://github.com/NichapatNobnorb) and [R. Wayu](https://github.com/cusniwtt)")
 
 st.markdown("---", unsafe_allow_html=True)

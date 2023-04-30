@@ -9,9 +9,6 @@ if 'logger' not in st.session_state:
     st.session_state['logger'] = setup_logging()
     st.session_state['logger'].info('Result page loaded')
 
-# import img
-
-
 def nav_page(page_name, timeout_secs=3):
     nav_script = """
         <script type="text/javascript">
@@ -36,6 +33,9 @@ def nav_page(page_name, timeout_secs=3):
         </script>
     """ % (page_name, timeout_secs)
     html(nav_script)
+
+def generate_dropdown_list(df, section_size):
+    return ['{} - {}'.format((i+1), i+10) for i in range(0, len(df), section_size)]
 
 st.set_page_config(
     page_title="Result", 
@@ -92,16 +92,16 @@ if image is not None:
         """,
         unsafe_allow_html=True
     )
+    st.sidebar.warning('Zoom in by dragging a rectangle around the area, zoom out by double-clicking.', icon="⚠️")
     st.sidebar.markdown('## Your uploaded image', unsafe_allow_html=True)
     st.sidebar.image(image, use_column_width=True)
     if st.sidebar.button('Upload another image', use_container_width=True):
         st.session_state['is_analyzed'] = False
         # Passthrough to upload button
         nav_page('')
-    st.sidebar.warning('Zoom in by dragging a rectangle around the area, zoom out by double-clicking.', icon="⚠️")
 
     numbercell = len(df_result.index)
-    st.markdown(""" #### Number of Nucleus is <span style="background-color: #A4A4A4; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell)), unsafe_allow_html=True)
+    st.markdown(""" ### Number of Nucleus is <span style="background-color: #A4A4A4; font-size:16.0pt; color:white">&nbsp;{temp}&nbsp;</span> nucleus """.format(temp=str(numbercell)), unsafe_allow_html=True)
 
     # Create figure
     fig = go.Figure()
@@ -166,139 +166,38 @@ if image is not None:
             use_container_width=True
         )
 
+    # Table of results
     st.markdown('---')
-    st.markdown('#### Result Table', unsafe_allow_html=True)
-    csv = convert_df(df_result)
+    head, spacer, select_box = st.columns([4, 3, 6])
+    with head:
+        st.markdown('### Result Table', unsafe_allow_html=True)
 
-    df_resultshow1=df_result.drop(columns=['xmin','ymin','xmax','ymax'])
+    df_result_show = df_result.drop(columns=['xmin','ymin','xmax','ymax'])
+    start = 1
+    stop = 10
+    current_section = st.session_state.get("start", start)
+    st.session_state.get("stop", stop)
 
-    # Read in your dataframe
-    df = df_resultshow1
+    dropdown_list = generate_dropdown_list(df_result_show, 10)
 
-    # Set the number of rows to display per page
-    rows_per_page = 10
+    with select_box:
+        jump_to_section = st.selectbox("Jump to nucleus number", dropdown_list)
 
-    # Initialize the current page number
-    current_page = st.session_state.get("current_page", 1)
+    if int(jump_to_section.split()[0]) != current_section:
+        start = int(jump_to_section.split()[0])
+        stop = int(jump_to_section.split()[2])
 
-    # Calculate the total number of pages
-    total_pages = int(len(df) / rows_per_page) + 1
+    st.dataframe(df_result_show.iloc[start-1:stop], use_container_width=True)
 
-    # Create the navigation buttons and container
-    spacer, previous_button, dropdown_page, next_button,  spacer = st.columns([4, 6, 6, 6,4])
-    with previous_button:
-        st.write(" ")
-        st.write(" ")
-        if st.button("Previous"):
-            if current_page > 1:
-                current_page -= 1
-                st.session_state["current_page"] = current_page
-
-    # Create numbered dropdown for choosing a page of the table
-    with dropdown_page:
-        # st.write("Go to page:")
-        page_selection = st.selectbox("", list(range(1, total_pages + 1)), index=current_page - 1)
-        if page_selection != current_page:
-            current_page = page_selection
-            st.session_state["current_page"] = current_page
-
-    # Create the "Next" button
-    # with next_button:
-        # if st.button("Next"):
-        #     if current_page < total_pages:
-        #         current_page += 1
-        #         st.session_state["current_page"] = current_page
-    with next_button:
-        st.write(" ")
-        st.write(" ")
-        if st.button("Next") and current_page < total_pages:
-            current_page += 1
-            st.session_state["current_page"] = current_page
-        
-    # with show_all_button:
-    #     if st.button("Show all rows"):
-    #         rows_per_page = len(df)
-    #         current_page = 1
-    #         st.session_state["current_page"] = current_page
-
-    # Calculate the starting and ending row numbers for the current page
-    start_row = (current_page - 1) * rows_per_page
-    if rows_per_page == len(df):
-        end_row = len(df)
-    else:
-        end_row = min(start_row + rows_per_page, len(df))
-
-    # Display the set of rows based on the starting and ending row numbers
-    if end_row > start_row:
-        st.write(df[start_row:end_row])
-    else:
-        st.write(df[start_row:])
-     
-
-
-    # st.write(df_resultshow1, use_container_width='always', text_align='center')
     spacer, dwn_btn_t, spacer = st.columns([4,6,4])
     with dwn_btn_t:
         st.download_button(
         label="🗒️ Save table",
-        data=csv,
+        data=convert_df(df_result),
         file_name='{}.csv'.format(st.session_state['image_name'][:-4]),
         mime='text/csv',
         use_container_width=True
     )
-
-    # Load your data into a pandas DataFrame
-    data = df_resultshow1
-
-    # Define the number of rows to display per page
-    page_size = 25
-
-
-    # Calculate the total number of pages needed
-    num_pages = int(len(data) / page_size) + 1
-
-    # Define a page number variable to keep track of the current page
-    page_num = 1
-
-    # Define the starting and ending row indices for the current page
-    start_idx = (page_num - 1) * page_size
-    end_idx = start_idx + page_size
-
-    # Add buttons to move to the previous and next page
-
-    col1, col2, col3 = st.columns([1, 2, 1])
-    if col1.button('Prev') and page_num > 1:
-        page_num -= 1
-
-    if col3.button('Nextt') and page_num < num_pages:
-        page_num += 1
-
-    start_idx = (page_num - 1) * page_size
-    end_idx = start_idx + page_size
-    # Add the page number slider between the "Prev" and "Next" buttons
-    with col2.container():
-        new_page_num = st.slider('Page Number', 1, num_pages, page_num)
-        if new_page_num != page_num:
-            page_num = new_page_num
-            start_idx = (page_num - 1) * page_size
-            end_idx = start_idx + page_size
-
-
-        # Display the DataFrame with pagination
-    col2.write(f"Showing rows {start_idx + 1} to {min(end_idx, len(data))} of {len(data)}")
-    st.write(data[start_idx:end_idx])
-
-
-
-    # columns = st.multiselect("Columns:",df_result.columns)
-    # filter = st.radio("Choose by:", ("inclusion","exclusion"))
-
-    # if filter == "exclusion":
-    #     columns = [col for col in df_result.columns if col not in columns]
-    # df_result[columns]
-    # df_resultselect=df_result[columns]
-    # csv2 = convert_df(df_resultselect)
-    
 
 else:
     st.warning('You didn\'t upload image. Please upload image first at the Home page.', icon="⚠️")

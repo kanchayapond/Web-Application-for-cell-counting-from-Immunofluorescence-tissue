@@ -158,24 +158,25 @@ def run(
             # Stream results
             im0 = annotator.result()
     df = pd.DataFrame(detections, columns=['class', 'x', 'y', 'w', 'h', 'conf'])
-    df = df[['x', 'y', 'w', 'h']]
+    df = df[['x', 'y', 'w', 'h', 'conf']]
     
-    column_name = ['class', 'xmin', 'ymin', 'xmax', 'ymax']
+    column_name = ['xmin', 'ymin', 'xmax', 'ymax', 'Confidence']
     pascal_voc = pd.DataFrame(columns=column_name)
     for i in range(len(df)):
-        pascal_voc.loc[i,'class'] = 'nucleus'
         pascal_voc.loc[i,'xmin']  = int((df.loc[i,'x'] - df.loc[i,'w']/2)*320)
         pascal_voc.loc[i,'ymin']  = int((df.loc[i,'y'] - df.loc[i,'h']/2)*256)
         pascal_voc.loc[i,'xmax']  = int((df.loc[i,'x'] + df.loc[i,'w']/2)*320)
         pascal_voc.loc[i,'ymax']  = int((df.loc[i,'y'] + df.loc[i,'h']/2)*256)
+        pascal_voc.loc[i,'Confidence']  = df.loc[i,'conf']
 
     # Cast dtypes
     pascal_voc = pascal_voc.astype({
-        'class': 'str', 
         'xmin': 'int32', 
         'ymin': 'int32', 
         'xmax': 'int32', 
-        'ymax': 'int32'})
+        'ymax': 'int32',
+        'Confidence': 'float32'
+        },)
 
     return im0, pascal_voc
 

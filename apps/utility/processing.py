@@ -197,9 +197,18 @@ def analyzing(state):
     df_result['Major radius (px)'] = h_r
     df_result['Minor radius (px)'] = v_r
     df_result['Area (px^2)'] = area
-    df_result= df_result.drop(columns=['class'])
 
-    df_result = df_result.astype({"Mean Intensity":"int","Major radius (px)":"int","Minor radius (px)":"int","Area (px^2)":"int"})
+    columns = list(df_result.columns)
+    columns.append(columns.pop(4))
+    df_result = df_result.reindex(columns=columns)
+
+    df_result = df_result.astype({
+        "Mean Intensity":"int",
+        "Major radius (px)":"int",
+        "Minor radius (px)":"int",
+        "Area (px^2)":"int",
+        'Confidence': 'float'
+        })
     # Clean temporary files
     clean_up()
 

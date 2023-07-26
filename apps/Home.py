@@ -118,12 +118,14 @@ count the number of nuclei in DAPI-stained tissue biopsy images. It provides mul
 including an image with identified nuclei highlighted, a numerical value indicating the total number of 
 nuclei, and a table containing additional metrics.
 """, unsafe_allow_html=True)
-
-st.markdown("""
+st.info("""
+With our state-of-the-art model, YOLOv5, we have achieved outstanding performance with an **F1-score of 0.902** 
+and a **DSC (Dice Similarity Coefficient) of 0.713**. This high-performing model will be seamlessly 
+integrated into our web application, ensuring accurate and efficient nucleus counting in DAPI-stained 
+tissue biopsy images.
 Details of our work are provided in the following paper: 
-[Web Application for Automatic Nucleus Counting Immunofluorescence Tissue Biopsies](https://github.com/kanchayapond/Web-Application-for-cell-counting-from-Immunofluorescence-tissue) 
-We hope that researchers will use Imgpress to reduce errors and increase accuracy.
-""", unsafe_allow_html=True)
+[Web Application for Automatic Nucleus Counting Immunofluorescence Tissue Biopsies](https://github.com/kanchayapond/Web-Application-for-cell-counting-from-Immunofluorescence-tissue)
+""", icon="ℹ")
 
 st.markdown("### How to use?", unsafe_allow_html=True)
 coldes,spacer,colimg = st.columns([22,1,14])

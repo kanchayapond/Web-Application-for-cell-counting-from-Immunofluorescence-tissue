@@ -1,11 +1,22 @@
 {
-    "hosting": {
-        "rewrites": [{
-            "source": "**",
-            "run": {
-                "serviceId": "imgpress-prod",
-                "region": "asia-southeast1"
+    "hosting":{
+        "public": "public",
+        "redirects": [
+            {
+                "source": "/",
+                "destination": "/index.html",
+                "type": 301
             }
-        }]
+        ],
+        "ignore":[
+            "firebase.json",
+            "**/.*",
+            "venv",
+            "notebooks",
+            "server",
+            "readme.md"
+        ]
     }
+    
+
 }

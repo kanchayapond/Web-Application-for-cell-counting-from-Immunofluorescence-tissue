@@ -104,9 +104,10 @@ with headimg:
         unsafe_allow_html=True,
     )
 with headtitl:
-    st.markdown("# Imgpress", unsafe_allow_html=True)
+    st.markdown("# CRA CellQuant: 'Cellular Recognition and Analysis for Cell Quantification'", unsafe_allow_html=True)
     st.markdown("##### Automated Quantification of DAPI-stained Nuclei in Immunofluorescence Tissue", unsafe_allow_html=True)
-    st.markdown("create by [S. Kanchayapond](https://github.com/kanchayapond), [N. Nichapat](https://github.com/NichapatNobnorb) and [R. Wayu](https://github.com/cusniwtt)")
+    st.markdown("Owner : Anyamanee C., Paniti A., Uraiwan P., Trirat A.")
+    st.markdown("Created by [S. Kanchayapond](https://github.com/kanchayapond), [N. Nichapat](https://github.com/NichapatNobnorb) and [R. Wayu](https://github.com/cusniwtt)")
 
 st.markdown("---", unsafe_allow_html=True)
 
@@ -183,7 +184,7 @@ with Authors:
     """, unsafe_allow_html=True)
     st.markdown("""
     **Ms. Kanchayapond Seajoong**
-    - Email: kanchayapond.earn@mail.kmutt.ac.th
+    - Email: earnjoong@gmail.com
     - Github: [github.com/kanchayapond](https://github.com/kanchayapond)
     """, unsafe_allow_html=True)
     st.markdown("""
@@ -203,4 +204,5 @@ with licenses:
 
 st.markdown("---", unsafe_allow_html=True)
 st.markdown("<h6 style='text-align: center;  '>Web Application for Automatic Nucleus Counting 3D Immunofluorescence Tissue Biopsies Using Image Processing</h6>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;  font-size:80%; '>A PROJECT SUBMITTED IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF BACHELOR OF SCIENCE (COMPUTER ENGINEERING), FACULTY OF ENGINEERING, KING MONGKUT’S UNIVERSITY OF TECHNOLOGY THONBURI 2022</p>", unsafe_allow_html=True)
+# st.markdown("<p style='text-align: center;  font-size:80%; '>A PROJECT SUBMITTED IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF BACHELOR OF SCIENCE (COMPUTER ENGINEERING), FACULTY OF ENGINEERING, KING MONGKUT’S UNIVERSITY OF TECHNOLOGY THONBURI 2022</p>", unsafe_allow_html=True)
+st.markdown("<p style='text-align: center;  font-size:100%; '>Created by [S. Kanchayapond](https://github.com/kanchayapond), [N. Nichapat](https://github.com/NichapatNobnorb) and [R. Wayu](https://github.com/cusniwtt)</p>", unsafe_allow_html=True)

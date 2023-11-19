@@ -104,10 +104,11 @@ with headimg:
         unsafe_allow_html=True,
     )
 with headtitl:
-    st.markdown("# CRA CellQuant: 'Cellular Recognition and Analysis for Cell Quantification'", unsafe_allow_html=True)
-    st.markdown("##### Automated Quantification of DAPI-stained Nuclei in Immunofluorescence Tissue", unsafe_allow_html=True)
-    st.markdown("Owner : Anyamanee C., Paniti A., Uraiwan P., Trirat A.")
-    st.markdown("Created by [S. Kanchayapond](https://github.com/kanchayapond), [N. Nichapat](https://github.com/NichapatNobnorb) and [R. Wayu](https://github.com/cusniwtt)")
+    st.markdown("# CRA CellQuant", unsafe_allow_html=True)
+    st.markdown("##### Cellular Recognition and Analysis for Cell Quantification", unsafe_allow_html=True)
+    # st.markdown("##### Automated Quantification of DAPI-stained Nuclei in Immunofluorescence Tissue", unsafe_allow_html=True)
+    st.markdown("Owner : Anyamanee C., Paniti A., Uraiwan P., Kanchayapond S., Nichapat N., Wayu R., Trirat A.")
+    # st.markdown("Created by [S. Kanchayapond](https://github.com/kanchayapond), [N. Nichapat](https://github.com/NichapatNobnorb) and [R. Wayu](https://github.com/cusniwtt)")
 
 st.markdown("---", unsafe_allow_html=True)
 
@@ -175,34 +176,53 @@ with colimg:
     st.image(Not_rec, use_column_width= 'always', caption='Not recomended example of DAPI image')
 
 st.markdown("---", unsafe_allow_html=True)
-
-Authors, licenses = st.columns([24,16])
-with Authors:
+ruengyed,yeee = st.columns([31,1])
+with ruengyed:
     st.markdown("""
-    ### Authors
+    ### Inventor team
     Please feel free to contact us with any issues, comments, or questions.
     """, unsafe_allow_html=True)
+Authors, licenses = st.columns([16,16])
+with Authors:
+    st.markdown("""
+    **Asst. Prof. Dr. Anyamanee Chatsirisupachai, PhD**
+    - Email: nyamanee.cha@cra.ac.th
+    """, unsafe_allow_html=True)
+    st.markdown("""
+    **Dr. Paniti Achararit, PhD**
+    - Email: paniti.ach@cra.ac.th
+    """, unsafe_allow_html=True)
+    st.markdown("""
+    **Professor Uraiwan Panich, MD, PhD**
+    - Email: uraiwan.pan@edu.mahidol.ac.th
+    """, unsafe_allow_html=True)
+
+
+with licenses:
+    # st.markdown("### Licenses")
+    # st.markdown("[MIT License Copyright (c) 2023 Earnn](https://github.com/cusniwtt/Web-Application-for-cell-counting-from-Immunofluorescence-tissue/blob/main/LICENSE)", unsafe_allow_html=True)
+    
     st.markdown("""
     **Ms. Kanchayapond Seajoong**
-    - Email: earnjoong@gmail.com
+    - Email: kanchayapond.sae@edu.cra.ac.th
     - Github: [github.com/kanchayapond](https://github.com/kanchayapond)
     """, unsafe_allow_html=True)
     st.markdown("""
     **Ms. Nichapat Nobnorb**
-    - Email: nichapat.best@mail.kmutt.ac.th
+    - Email: nichapat.nob@edu.cra.ac.th
     - Github: [github.com/NichapatNobnorb](https://github.com/NichapatNobnorb)
     """, unsafe_allow_html=True)
     st.markdown("""
     **Mr. Wayu Ragwongsiri**
-    - Email: wayu.qwertyuiop@mail.kmutt.ac.th
+    - Email: wayu.rag@edu.cra.ac.th
     - Github: [github.com/cusniwtt](https://github.com/cusniwtt)
     """, unsafe_allow_html=True)
-
-with licenses:
-    st.markdown("### Licenses")
-    st.markdown("[MIT License Copyright (c) 2023 Earnn](https://github.com/cusniwtt/Web-Application-for-cell-counting-from-Immunofluorescence-tissue/blob/main/LICENSE)", unsafe_allow_html=True)
+    st.markdown("""
+    **Mr. Trirat Arromrit**
+    - Email: trirat.arr@edu.cra.ac.th
+    """, unsafe_allow_html=True)
 
 st.markdown("---", unsafe_allow_html=True)
-st.markdown("<h6 style='text-align: center;  '>Web Application for Automatic Nucleus Counting 3D Immunofluorescence Tissue Biopsies Using Image Processing</h6>", unsafe_allow_html=True)
+# st.markdown("<h6 style='text-align: center;  '>Web Application for Automatic Nucleus Counting 3D Immunofluorescence Tissue Biopsies Using Image Processing</h6>", unsafe_allow_html=True)
 # st.markdown("<p style='text-align: center;  font-size:80%; '>A PROJECT SUBMITTED IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE DEGREE OF BACHELOR OF SCIENCE (COMPUTER ENGINEERING), FACULTY OF ENGINEERING, KING MONGKUT’S UNIVERSITY OF TECHNOLOGY THONBURI 2022</p>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center;  font-size:100%; '>Created by [S. Kanchayapond](https://github.com/kanchayapond), [N. Nichapat](https://github.com/NichapatNobnorb) and [R. Wayu](https://github.com/cusniwtt)</p>", unsafe_allow_html=True)
+# st.markdown("<p style='text-align: center;  font-size:100%; '>Created by [S. Kanchayapond](https://github.com/kanchayapond), [N. Nichapat](https://github.com/NichapatNobnorb) and [R. Wayu](https://github.com/cusniwtt)</p>", unsafe_allow_html=True)

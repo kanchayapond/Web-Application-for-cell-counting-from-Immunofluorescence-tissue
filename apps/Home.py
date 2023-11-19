@@ -186,7 +186,7 @@ Authors, licenses = st.columns([16,16])
 with Authors:
     st.markdown("""
     **Asst. Prof. Dr. Anyamanee Chatsirisupachai, PhD**
-    - Email: nyamanee.cha@cra.ac.th
+    - Email: anyamanee.cha@cra.ac.th
     """, unsafe_allow_html=True)
     st.markdown("""
     **Dr. Paniti Achararit, PhD**
